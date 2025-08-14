@@ -1276,7 +1276,7 @@ async function sendToGoogleSheets() {
   };
 
   try {
-    const response = await fetch('SUA_URL_DO_APPS_SCRIPT', {
+    const response = await fetch('https://script.google.com/macros/s/AKfycbxFyQyMKKL26-ekNQ3DbmSjcatj9Vi4sNNAvfpHSTNZH3EIyMRLh8PMkacQBzV7XxpP/exec', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
