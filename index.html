@@ -5,12 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Planilha de Custos - IN 5/2017 (Corrigida)</title>
   <style>
+    /* Your existing CSS remains unchanged */
     body { font-family: Arial, sans-serif; margin: 20px; background-color: #f9f9f9; }
     table { 
-  width: 80%; 
-  border-collapse: collapse; 
-  margin: 0 auto 20px; /* Centraliza e mantém margem inferior */
-}
+      width: 80%; 
+      border-collapse: collapse; 
+      margin: 0 auto 20px;
+    }
     .module-title { background-color: #444; color: #fff; text-align: center; font-weight: bold; padding: 8px; }
     th, td { border: 1px solid #444; padding: 6px; font-size: 14px; color: #000; vertical-align: middle; }
     th:nth-child(2), td:nth-child(2) { width: auto; }
@@ -29,13 +30,8 @@
     .remove-link { margin-left: 4px; color: #c00; cursor: pointer; font-weight: bold; }
     .remove-link:hover { color: #900; }
     .total-row td { font-weight: bold; background-color: #eee; }
-    .total-row td:last-child {
-  text-align: right;
-}
-.total-row td:nth-child(3) {
-  text-align: right;
-  font-weight: bold;
-}
+    .total-row td:last-child { text-align: right; }
+    .total-row td:nth-child(3) { text-align: right; font-weight: bold; }
     .add-link { display: inline-block; margin: 2px 0; color: #000; cursor: pointer; text-decoration: none; }
     .add-link:hover { text-decoration: underline; }
     .resumo-row td { background-color: #e6e6e6; }
@@ -43,174 +39,46 @@
     .btn-pdf { padding: 8px 12px; border: none; background-color: #444; color: #fff; cursor: pointer; border-radius: 4px; }
     .btn-pdf:hover { background-color: #666; }
     .debug-info { background-color: #ffe6e6; padding: 10px; margin: 10px 0; border-left: 4px solid #c00; }
-
-    /* Para os totais percentuais */
-.total-row input.percent-format,
-.total-row td.percent-format {
-  font-weight: bold !important;
-  text-align: right !important;
-}
-
-/* Para os totais em valores */
-.total-row input.brl-format,
-.total-row td.brl-format {
-  font-weight: bold !important;
-  text-align: right !important;
-}
-
-/* Especificamente para o Módulo 6 */
-#tbody6 .total-row td {
-  text-align: right !important;
-  font-weight: bold !important;
-}
-
-/* Para o quadro-resumo */
-#summary-table .total-row td {
-  text-align: right !important;
-  font-weight: bold !important;
-}
-    
-   @media print {
-  /* 1) Esconder controles */
-  .no-print,
-  .remove-link,
-  .debug-info {
-    display: none !important;
-  }
-
-  /* 2) Cores e ajustes básicos */
-  table,
-  th,
-  td {
-    -webkit-print-color-adjust: exact;
-  }
-  body {
-    margin: 0;
-  }
-  th {
-    background-color: #eee !important;
-  }
-  .module-title {
-    background-color: #444 !important;
-    color: #fff !important;
-  }
-  .resumo-row td {
-    background-color: #e6e6e6 !important;
-  }
-  .resumo-total td {
-    background-color: #d9d9d9 !important;
-  }
-
-  /* 3) Esconder todos os inputs */
-  input.brl-format,
-  input.percent-format,
-  input.text-input {
-    display: none !important;
-  }
-
-  /* 4) Alinhar spans (que substituem inputs) */
-  td > span {
-    display: inline-block;
-    width: 100%;
-    text-align: right !important;
-  }
-
-  /* 5) Alinhar tds que têm valor ou percentual direto */
-  td.percent-format,
-  td.brl-format {
-    text-align: right !important;
-  }
-
-  /* 6) Colunas 3 e 4 (se quiser reforçar) */
-  th:nth-child(3),
-  td:nth-child(3),
-  th:nth-child(4),
-  td:nth-child(4) {
-    text-align: right !important;
-  }
-
-  /* 7) Negrito nas linhas de total */
-  .total-row td,
-  .total-row td > span {
-    font-weight: bold !important;
-  }
-}
-
-#summary-table {
-    width: 60%;
-    border-collapse: collapse;
-    margin-top: 1em;
-    font-family: Arial, sans-serif;
-  }
-  /* 1ª linha de cabeçalho que abrange as 3 colunas */
-  #summary-table thead tr.title {
-    background-color: #fff;
-  }
-  #summary-table thead tr.title th {
-    border: 1px solid #000;
-    border-bottom: none;
-    padding: 8px;
-    font-size: 16px;
-    font-weight: bold;
-  }
-  /* 2ª linha de cabeçalho com colunas reais */
-  #summary-table thead tr.headers th {
-    background-color: #ddd;
-    border: 1px solid #000;
-    padding: 6px;
-    font-weight: bold;
-    text-align: center;
-  }
-  #summary-table tbody td {
-    border: 1px solid #000;
-    padding: 6px 10px;
-    font-size: 14px;
-    vertical-align: middle;
-  }
-  /* Center no código (coluna 1) */
-  #summary-table td:first-child {
-    text-align: center;
-    width: 60px;
-  }
-  /* Descrição (coluna 2) alinhada à esquerda */
-  #summary-table td:nth-child(2) {
-    text-align: left;
-  }
-  /* Valor (coluna 3) alinhada à direita */
-  #summary-table td:nth-child(3) {
-    text-align: right;
-    width: 20%;
-  }
-  /* Subtotais e totais em negrito e fundo cinza */
-  #summary-table .total-row td {
-    background-color: #eee;
-    font-weight: bold;
-  }
-  /* Linha destacada “Quantidade de empregados…” */
-  #summary-table .highlight-row {
-    background-color: #d0e7ff;
-    font-style: italic;
-  }
-
-  #tbody6 td {
-  border: 1px solid #444;      /* mesma cor e espessura dos demais */
-}
-
-/* Garante alinhamento à direita das colunas de % e R$ */
-#tbody6 td:nth-child(3),
-#tbody6 td:nth-child(4) {
-  text-align: right;
-}
-
-/* Se você quiser um pouquinho de padding interno nas células */
-#tbody6 td {
-  padding: 6px 10px;
-}
-
+    .total-row input.percent-format, .total-row td.percent-format { font-weight: bold !important; text-align: right !important; }
+    .total-row input.brl-format, .total-row td.brl-format { font-weight: bold !important; text-align: right !important; }
+    #tbody6 .total-row td { text-align: right !important; font-weight: bold !important; }
+    #summary-table .total-row td { text-align: right !important; font-weight: bold !important; }
+    @media print {
+      .no-print, .remove-link, .debug-info { display: none !important; }
+      table, th, td { -webkit-print-color-adjust: exact; }
+      body { margin: 0; }
+      th { background-color: #eee !important; }
+      .module-title { background-color: #444 !important; color: #fff !important; }
+      .resumo-row td { background-color: #e6e6e6 !important; }
+      .resumo-total td { background-color: #d9d9d9 !important; }
+      input.brl-format, input.percent-format, input.text-input { display: none !important; }
+      td > span { display: inline-block; width: 100%; text-align: right !important; }
+      td.percent-format, td.brl-format { text-align: right !important; }
+      th:nth-child(3), td:nth-child(3), th:nth-child(4), td:nth-child(4) { text-align: right !important; }
+      .total-row td, .total-row td > span { font-weight: bold !important; }
+    }
+    #summary-table {
+      width: 60%;
+      border-collapse: collapse;
+      margin-top: 1em;
+      font-family: Arial, sans-serif;
+    }
+    #summary-table thead tr.title { background-color: #fff; }
+    #summary-table thead tr.title th { border: 1px solid #000; border-bottom: none; padding: 8px; font-size: 16px; font-weight: bold; }
+    #summary-table thead tr.headers th { background-color: #ddd; border: 1px solid #000; padding: 6px; font-weight: bold; text-align: center; }
+    #summary-table tbody td { border: 1px solid #000; padding: 6px 10px; font-size: 14px; vertical-align: middle; }
+    #summary-table td:first-child { text-align: center; width: 60px; }
+    #summary-table td:nth-child(2) { text-align: left; }
+    #summary-table td:nth-child(3) { text-align: right; width: 20%; }
+    #summary-table .total-row td { background-color: #eee; font-weight: bold; }
+    #summary-table .highlight-row { background-color: #d0e7ff; font-style: italic; }
+    #tbody6 td { border: 1px solid #444; }
+    #tbody6 td:nth-child(3), #tbody6 td:nth-child(4) { text-align: right; }
+    #tbody6 td { padding: 6px 10px; }
   </style>
 </head>
 <body>
-  <!-- Módulo 1 -->
+  <!-- Your existing HTML tables remain unchanged -->
   <table>
     <thead>
       <tr><th colspan="3" class="module-title">Módulo 1 - Composição da Remuneração</th></tr>
@@ -226,15 +94,11 @@
       <tr class="total-row"><td colspan="2">Total</td><td><input type="text" id="total1" readonly class="brl-format" data-value="0" /></td></tr>
     </tbody>
   </table>
-  
-  <!-- Módulo 2 (cabeçalho geral) -->
   <table>
     <thead>
       <tr><th colspan="4" class="module-title">Módulo 2 - Encargos e Benefícios Anuais, Mensais e Diários</th></tr>
     </thead>
   </table>
-  
-  <!-- Submódulo 2.1 -->
   <table>
     <thead>
       <tr><th colspan="4" class="module-title" style="background:#666;">Submódulo 2.1 - 13º Salário e Adicional de Férias</th></tr>
@@ -254,16 +118,12 @@
         <td><input type="text" class="brl-format" data-value="0" readonly /></td>
       </tr>
       <tr class="total-row">
-  <td colspan="2">Total</td>
-  <!-- coluna de Percentual -->
-  <td><input type="text" id="total2-pct" readonly class="percent-format" data-value="0" /></td>
-  <!-- coluna de Valor -->
-  <td><input type="text" id="total2"     readonly class="brl-format"   data-value="0" /></td>
-</tr>
+        <td colspan="2">Total</td>
+        <td><input type="text" id="total2-pct" readonly class="percent-format" data-value="0" /></td>
+        <td><input type="text" id="total2" readonly class="brl-format" data-value="0" /></td>
+      </tr>
     </tbody>
   </table>
-  
-  <!-- Submódulo 2.2 -->
   <table>
     <thead>
       <tr><th colspan="4" class="module-title" style="background:#666;">Submódulo 2.2 - Encargos Previdenciários</th></tr>
@@ -281,8 +141,6 @@
       <tr class="total-row"><td colspan="2">Total</td><td><input type="text" id="total-pct3" readonly class="percent-format" data-value="0" /></td><td><input type="text" id="total3" readonly class="brl-format" data-value="0" /></td></tr>
     </tbody>
   </table>
-  
-  <!-- Submódulo 2.3 -->
   <table>
     <thead>
       <tr><th colspan="3" class="module-title" style="background:#666;">Submódulo 2.3 - Benefícios Mensais e Diários</th></tr>
@@ -297,9 +155,6 @@
       <tr class="total-row"><td colspan="2">Total</td><td><input type="text" id="total4" readonly class="brl-format" data-value="0" /></td></tr>
     </tbody>
   </table>
-
-  
-  <!-- Módulo 3 -->
   <table>
     <thead>
       <tr><th colspan="4" class="module-title">Módulo 3 - Provisão para Rescisão</th></tr>
@@ -315,15 +170,11 @@
       <tr class="total-row"><td colspan="2">Total</td><td><input type="text" id="total-pct5" readonly class="percent-format" data-value="0" /></td><td><input type="text" id="total5" readonly class="brl-format" data-value="0" /></td></tr>
     </tbody>
   </table>
-  
-  <!-- Módulo 4 - Custo de Reposição do Profissional Ausente -->
   <table>
     <thead>
       <tr><th colspan="4" class="module-title">Módulo 4 - Custo de Reposição do Profissional Ausente</th></tr>
     </thead>
   </table>
-  
-  <!-- Submódulo 4.1 - Ausências Legais -->
   <table>
     <thead>
       <tr><th colspan="4" class="module-title" style="background:#666;">Submódulo 4.1 - Ausências Legais</th></tr>
@@ -365,61 +216,28 @@
           <span class="add-link" id="add-btn41">+ Adicionar Outro</span>
         </td>
       </tr>
-      
-      <!-- Subtotal antes de Proporcional -->
       <tr id="subtotal-before-prop" class="subtotal-row">
-        <td colspan="2">
-          Subtotal antes da incidência de proporcional de férias, 1/3 e 13º sobre custo de reposição
-        </td>
-        <td>
-          <input id="pct41_subtotal" readonly class="percent-format" data-value="0" />
-        </td>
-        <td>
-          <input id="subtotal41_before_prop" readonly class="brl-format" data-value="0" />
-        </td>
+        <td colspan="2">Subtotal antes da incidência de proporcional de férias, 1/3 e 13º sobre custo de reposição</td>
+        <td><input id="pct41_subtotal" readonly class="percent-format" data-value="0" /></td>
+        <td><input id="subtotal41_before_prop" readonly class="brl-format" data-value="0" /></td>
       </tr>
-  
-      <!-- Linha F – Proporcional -->
       <tr id="prop-row">
         <td>F</td>
-        <td>
-          Proporcional de férias, 1/3 e 13º sobre custo de reposição<br/>
-          <small>(exceto afastamento maternidade)</small>
-        </td>
-        <td>
-          <input id="pct41_prop" readonly class="percent-format fixed-percent" data-value="0" />
-        </td>
-        <td>
-          <input id="val41_prop" readonly class="brl-format" data-value="0" />
-        </td>
+        <td>Proporcional de férias, 1/3 e 13º sobre custo de reposição<br/><small>(exceto afastamento maternidade)</small></td>
+        <td><input id="pct41_prop" readonly class="percent-format fixed-percent" data-value="0" /></td>
+        <td><input id="val41_prop" readonly class="brl-format" data-value="0" /></td>
       </tr>
-  
-      <!-- Subtotal antes de Incidência do 2.2 -->
       <tr id="subtotal-before-22" class="subtotal-row">
-        <td colspan="2">
-          Subtotal antes da incidência do submódulo 2.2 sobre custo de reposição
-        </td>
-        <td>
-          <input id="pct41_subtotal_before22" readonly class="percent-format" data-value="0" />
-        </td>
-        <td>
-          <input id="subtotal41_before_22" readonly class="brl-format" data-value="0" />
-        </td>
+        <td colspan="2">Subtotal antes da incidência do submódulo 2.2 sobre custo de reposição</td>
+        <td><input id="pct41_subtotal_before22" readonly class="percent-format" data-value="0" /></td>
+        <td><input id="subtotal41_before_22" readonly class="brl-format" data-value="0" /></td>
       </tr>
-  
-      <!-- Linha G – Incidência do 2.2 -->
       <tr id="inc22-row">
         <td>G</td>
         <td>Incidência do submódulo 2.2 sobre custo de reposição</td>
-        <td>
-          <input id="pct41_inc22" readonly class="percent-format fixed-percent" data-value="0" />
-        </td>
-        <td>
-          <input id="val41_inc22" readonly class="brl-format" data-value="0" />
-        </td>
+        <td><input id="pct41_inc22" readonly class="percent-format fixed-percent" data-value="0" /></td>
+        <td><input id="val41_inc22" readonly class="brl-format" data-value="0" /></td>
       </tr>
-      
-      <!-- total geral -->
       <tr class="total-row">
         <td colspan="2">Total</td>
         <td><input type="text" id="total-pct41" readonly class="percent-format" data-value="0" /></td>
@@ -427,8 +245,6 @@
       </tr>
     </tbody>
   </table>
-  
-  <!-- Submódulo 4.2 - Intrajornada -->
   <table>
     <thead>
       <tr><th colspan="3" class="module-title" style="background:#666;">Submódulo 4.2 - Intrajornada</th></tr>
@@ -446,28 +262,21 @@
       </tr>
     </tbody>
   </table>
-  
-  <!-- Módulo 5 - Insumos Diversos -->
   <table>
-  <thead>
-    <tr><th colspan="3" class="module-title">Módulo 5 - Insumos Diversos</th></tr>
-    <tr><th>Item</th><th>Descrição</th><th>Valor (R$)</th></tr>
-  </thead>
-  <tbody id="tbody5ins">
-    <tr><td>A</td><td>Uniformes</td><td><input type="text" class="brl-format" data-value="0" /></td></tr>
-    <tr><td>B</td><td>Materiais</td><td><input type="text" class="brl-format" data-value="0" /></td></tr>
-    <tr><td>C</td><td>Equipamentos</td><td><input type="text" class="brl-format" data-value="0" /></td></tr>
-    
-    <!-- NOVA LINHA DO BOTÃO ADICIONAR -->
-    <tr id="add-row-trigger5ins"><td colspan="3" class="no-print" style="text-align:center;">
-      <span class="add-link" id="add-btn5ins">+ Adicionar Outro</span>
-    </td></tr>
-    
-    <tr class="total-row"><td colspan="2">Total</td><td><input type="text" id="total5ins" readonly class="brl-format" data-value="0" /></td></tr>
-  </tbody>
-</table>
-  
-  <!-- Módulo 6 - Custos Indiretos, Tributos e Lucro -->
+    <thead>
+      <tr><th colspan="3" class="module-title">Módulo 5 - Insumos Diversos</th></tr>
+      <tr><th>Item</th><th>Descrição</th><th>Valor (R$)</th></tr>
+    </thead>
+    <tbody id="tbody5ins">
+      <tr><td>A</td><td>Uniformes</td><td><input type="text" class="brl-format" data-value="0" /></td></tr>
+      <tr><td>B</td><td>Materiais</td><td><input type="text" class="brl-format" data-value="0" /></td></tr>
+      <tr><td>C</td><td>Equipamentos</td><td><input type="text" class="brl-format" data-value="0" /></td></tr>
+      <tr id="add-row-trigger5ins"><td colspan="3" class="no-print" style="text-align:center;">
+        <span class="add-link" id="add-btn5ins">+ Adicionar Outro</span>
+      </td></tr>
+      <tr class="total-row"><td colspan="2">Total</td><td><input type="text" id="total5ins" readonly class="brl-format" data-value="0" /></td></tr>
+    </tbody>
+  </table>
   <table>
     <thead>
       <tr><th colspan="4" class="module-title">Módulo 6 - Custos Indiretos, Tributos e Lucro</th></tr>
@@ -485,840 +294,612 @@
         <td><input type="text" class="brl-format" data-value="0" /></td>
       </tr>
       <tr data-item="ISS">
-  <td>C</td><td>ISS</td>
-  <td><input type="text" class="percent-format" data-value="5.00" /></td>
-  <td><input type="text" class="brl-format" data-value="0" readonly /></td>
-</tr>
-<tr data-item="COFINS">
-  <td>D</td><td>COFINS</td>
-  <td><input type="text" class="percent-format" data-value="3.00" /></td>
-  <td><input type="text" class="brl-format" data-value="0" readonly /></td>
-</tr>
-<tr data-item="PIS">
-  <td>E</td><td>PIS</td>
-  <td><input type="text" class="percent-format" data-value="0.65" /></td>
-  <td><input type="text" class="brl-format" data-value="0" readonly /></td>
-</tr>
-<tr class="total-row">
-  <td colspan="2">Total</td>
-  <td id="total-pct6" class="percent-format" data-value="0"></td>
-  <td id="total6"     class="brl-format"     data-value="0"></td>
-</tr>
+        <td>C</td><td>ISS</td>
+        <td><input type="text" class="percent-format" data-value="5.00" /></td>
+        <td><input type="text" class="brl-format" data-value="0" readonly /></td>
+      </tr>
+      <tr data-item="COFINS">
+        <td>D</td><td>COFINS</td>
+        <td><input type="text" class="percent-format" data-value="3.00" /></td>
+        <td><input type="text" class="brl-format" data-value="0" readonly /></td>
+      </tr>
+      <tr data-item="PIS">
+        <td>E</td><td>PIS</td>
+        <td><input type="text" class="percent-format" data-value="0.65" /></td>
+        <td><input type="text" class="brl-format" data-value="0" readonly /></td>
+      </tr>
+      <tr class="total-row">
+        <td colspan="2">Total</td>
+        <td id="total-pct6" class="percent-format" data-value="0"></td>
+        <td id="total6" class="brl-format" data-value="0"></td>
+      </tr>
     </tbody>
-
   </table>
-  
- <!-- Quadro-resumo do custo por empregado -->
-<h2 style="text-align: center;">2. Quadro-Resumo do Custo por Empregado</h2>
-<table id="summary-table">
-  <thead>
-    <tr class="title">
-      <th colspan="3">Mão de obra vinculada à execução contratual (valor por empregado)</th>
-    </tr>
-    <tr class="headers">
-      <th>Item</th>
-      <th>Descrição</th>
-      <th>Valor (R$)</th>
-    </tr>
-  </thead>
-  <tbody>
-    <!-- Itens de A a F (módulos 1-6) -->
-    <tr><td>A</td><td>Módulo 1 – Composição da Remuneração</td><td id="sum1" class="brl-format" data-value="0"></td></tr>
-    <tr><td>B</td><td>Módulo 2 – Encargos e Benefícios</td><td id="sum2" class="brl-format" data-value="0"></td></tr>
-    <tr><td>C</td><td>Módulo 3 – Provisão para Rescisão</td><td id="sum3" class="brl-format" data-value="0"></td></tr>
-    <tr><td>D</td><td>Módulo 4 – Custo de Reposição</td><td id="sum4" class="brl-format" data-value="0"></td></tr>
-    <tr><td>E</td><td>Módulo 5 – Insumos Diversos</td><td id="sum5" class="brl-format" data-value="0"></td></tr>
-    <tr class="total-row"><td colspan="2">Subtotal (A+B+C+D+E)</td><td id="subtotal" class="brl-format" data-value="0"></td></tr>
-    <tr><td>F</td><td>Módulo 6 – Custos Indiretos</td><td id="sum6" class="brl-format" data-value="0"></td></tr>
-    <tr class="total-row"><td colspan="2"><strong>Valor total por empregado</strong></td><td id="totalEmployee" class="brl-format" data-value="0"></td></tr>
-    
-    <!-- Campos editáveis -->
-    <tr class="highlight-row">
-      <td colspan="2">Quantidade de empregados</td>
-      <td><input type="number" id="numEmployees" value="1" min="1" style="width:60px; text-align:right;"></td>
-    </tr>
-    <tr>
-      <td colspan="2">Valor mensal</td>
-      <td id="monthlyTotal" class="brl-format" data-value="0"></td>
-    </tr>
-    <tr class="highlight-row">
-      <td colspan="2">Tempo de contrato (meses)</td>
-      <td><input type="number" id="contractMonths" value="12" min="1" style="width:60px; text-align:right;"></td>
-    </tr>
-    <tr class="total-row">
-      <td colspan="2"><strong>Valor total do contrato</strong></td>
-      <td id="contractTotal" class="brl-format" data-value="0"></td>
-    </tr>
-  </tbody>
-</table>
-
+  <h2 style="text-align: center;">2. Quadro-Resumo do Custo por Empregado</h2>
+  <table id="summary-table">
+    <thead>
+      <tr class="title">
+        <th colspan="3">Mão de obra vinculada à execução contratual (valor por empregado)</th>
+      </tr>
+      <tr class="headers">
+        <th>Item</th>
+        <th>Descrição</th>
+        <th>Valor (R$)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>A</td><td>Módulo 1 – Composição da Remuneração</td><td id="sum1" class="brl-format" data-value="0"></td></tr>
+      <tr><td>B</td><td>Módulo 2 – Encargos e Benefícios</td><td id="sum2" class="brl-format" data-value="0"></td></tr>
+      <tr><td>C</td><td>Módulo 3 – Provisão para Rescisão</td><td id="sum3" class="brl-format" data-value="0"></td></tr>
+      <tr><td>D</td><td>Módulo 4 – Custo de Reposição</td><td id="sum4" class="brl-format" data-value="0"></td></tr>
+      <tr><td>E</td><td>Módulo 5 – Insumos Diversos</td><td id="sum5" class="brl-format" data-value="0"></td></tr>
+      <tr class="total-row"><td colspan="2">Subtotal (A+B+C+D+E)</td><td id="subtotal" class="brl-format" data-value="0"></td></tr>
+      <tr><td>F</td><td>Módulo 6 – Custos Indiretos</td><td id="sum6" class="brl-format" data-value="0"></td></tr>
+      <tr class="total-row"><td colspan="2"><strong>Valor total por empregado</strong></td><td id="totalEmployee" class="brl-format" data-value="0"></td></tr>
+      <tr class="highlight-row">
+        <td colspan="2">Quantidade de empregados</td>
+        <td><input type="number" id="numEmployees" value="1" min="1" style="width:60px; text-align:right;"></td>
+      </tr>
+      <tr>
+        <td colspan="2">Valor mensal</td>
+        <td id="monthlyTotal" class="brl-format" data-value="0"></td>
+      </tr>
+      <tr class="highlight-row">
+        <td colspan="2">Tempo de contrato (meses)</td>
+        <td><input type="number" id="contractMonths" value="12" min="1" style="width:60px; text-align:right;"></td>
+      </tr>
+      <tr class="total-row">
+        <td colspan="2"><strong>Valor total do contrato</strong></td>
+        <td id="contractTotal" class="brl-format" data-value="0"></td>
+      </tr>
+    </tbody>
+  </table>
   <div class="actions no-print">
     <button id="gen-pdf" class="btn-pdf">Gerar PDF</button>
   </div>
-  
   <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    // formatação e parse
-    function formatBRL(el, val) {
-  const formatted = new Intl.NumberFormat('pt-BR', {
-    style: 'currency',
-    currency: 'BRL'
-  }).format(val);
-
-  el.setAttribute('data-value', val);
-
-  if ('value' in el) {
-    // é um <input>
-    el.value = formatted;
-  } else {
-    // é um <td> (ou outro), joga no textContent
-    el.textContent = formatted;
-  }
-}
-
-function formatPct(el, val) {
-  const formatted = val.toLocaleString('pt-BR', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  }) + '%';
-
-  el.setAttribute('data-value', val);
-
-  if ('value' in el) {
-    el.value = formatted;
-  } else {
-    el.textContent = formatted;
-  }
-}
-    
-    function parseNumber(str) { 
-      return parseFloat(str.replace(/[^0-9\-\.,]/g,'').replace(',','.')) || 0; 
-    }
-  
-    // -------------------
-    // Módulo 1
-    // -------------------
-    const tbody1 = document.getElementById('tbody1');
-    const total1  = document.getElementById('total1');
-    const addBtn1 = document.getElementById('add-btn1');
-  
-    const recalc1 = () => {
-      let sum = 0;
-      tbody1.querySelectorAll('tr:not(.total-row):not(#add-row-trigger1) .brl-format').forEach(i => {
-        sum += parseNumber(i.getAttribute('data-value'));
-      });
-      formatBRL(total1, sum);
-  
-      const subtotal21 = recalc2(sum);
-      const base22     = sum + subtotal21;
-      recalc3(base22);
-      recalc4();
-      recalc5();
-      recalc5ins(); 
-
-  
-      // Módulo 4
-      const base4 = sum;
-      recalc41(base4);
-      recalc42();
-  
-    
-      
-      // Recalcular Módulo 6
-      recalc6();
-    };
-  
-    tbody1.querySelectorAll('.brl-format').forEach(i => formatBRL(i, 0));
-    tbody1.addEventListener('focusin', e => {
-      if (e.target.classList.contains('brl-format')) {
-        e.target.value = parseNumber(e.target.getAttribute('data-value')) || '';
+    document.addEventListener('DOMContentLoaded', () => {
+      // Your existing format and parse functions
+      function formatBRL(el, val) {
+        const formatted = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
+        el.setAttribute('data-value', val);
+        if ('value' in el) { el.value = formatted; } else { el.textContent = formatted; }
       }
-    });
-    tbody1.addEventListener('focusout', e => {
-      if (e.target.classList.contains('brl-format')) {
-        formatBRL(e.target, parseNumber(e.target.value));
-        recalc1();
+      function formatPct(el, val) {
+        const formatted = val.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%';
+        el.setAttribute('data-value', val);
+        if ('value' in el) { el.value = formatted; } else { el.textContent = formatted; }
       }
-    });
-    tbody1.addEventListener('click', e => {
-      if (e.target.classList.contains('remove-link')) {
-        e.target.closest('tr').remove();
-        recalc1();
+      function parseNumber(str) { 
+        return parseFloat(str.replace(/[^0-9\-\.,]/g,'').replace(',','.')) || 0; 
       }
-    });
-    addBtn1.addEventListener('click', () => {
-      const rows = tbody1.querySelectorAll('tr:not(.total-row):not(#add-row-trigger1)');
-      const last = rows[rows.length - 1].querySelector('td:first-child').textContent.charCodeAt(0);
-      const L    = String.fromCharCode(last + 1);
-      const tr   = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${L}</td>
-        <td><div style="display:flex;">
-              <input class="text-input" placeholder="Descrição...">
-              <span class="remove-link no-print">×</span>
-            </div></td>
-        <td><input class="brl-format" data-value="0"></td>`;
-      tbody1.insertBefore(tr, document.getElementById('add-row-trigger1'));
-      formatBRL(tr.querySelector('.brl-format'), 0);
-    });
-  
-    // -------------------
-    // Submódulo 2.1
-    // -------------------
-   const tbody2 = document.getElementById('tbody2');
-const total2 = document.getElementById('total2');
-const total2Pct = document.getElementById('total2-pct'); // novo elemento para total do percentual
-
-// Formatar as duas células de percentual da tabela
-[...tbody2.querySelectorAll('tr')].slice(0, 2).forEach(r => {
-  const pctEl = r.querySelector('.percent-format');
-  formatPct(pctEl, parseNumber(pctEl.getAttribute('data-value')));
-});
-
-// Função para recalcular os valores do submódulo
-function recalc2(base) {
-  const v1 = base / 12;  // 13º salário = 8,33%
-  const v2 = base / 36;  // Adicional de férias = 2,78%
-
-  // Atualiza os valores em R$
-  formatBRL(tbody2.rows[0].cells[3].querySelector('.brl-format'), v1);
-  formatBRL(tbody2.rows[1].cells[3].querySelector('.brl-format'), v2);
-
-  // Atualiza o total em R$
-  const s = v1 + v2;
-  formatBRL(total2, s);
-
-  // Atualiza o total dos percentuais
-  const pctTotal = 8.33 + 2.78; // fixo, se os percentuais não forem editáveis
-  formatPct(total2Pct, pctTotal);
-
-  return s;
-}
-  
-    // -------------------
-    // Submódulo 2.2
-    // -------------------
-    const tbody3     = document.getElementById('tbody3');
-    const total3     = document.getElementById('total3');
-    const totalPct3  = document.getElementById('total-pct3');
-    const rows3      = [...tbody3.querySelectorAll('tr')].slice(0,8);
-    rows3.forEach(r => formatPct(r.querySelector('.percent-format'),
-      parseNumber(r.querySelector('.percent-format').getAttribute('data-value'))));
-  
-    function recalc3(base) {
-      let sum = 0, p = 0;
-      rows3.forEach(r => {
-        const pct = parseNumber(r.querySelector('.percent-format').getAttribute('data-value'));
-        const val = base * pct / 100;
-        formatBRL(r.querySelector('.brl-format'), val);
-        sum += val;
-        p   += pct;
-      });
-      formatPct(totalPct3, p);
-      formatBRL(total3, sum);
-      return sum;
-    }
-    rows3.forEach(r => {
-      const pct = r.querySelector('.percent-format');
-      pct.addEventListener('focusin', () => {
-        pct.value = parseNumber(pct.getAttribute('data-value')) || '';
-      });
-      pct.addEventListener('focusout', () => {
-        let v = parseNumber(pct.value);
-        if (isNaN(v) || pct.value === '') v = parseNumber(pct.getAttribute('data-value')) || 0;
-        formatPct(pct, v);
-        recalc1();
-      });
-    });
-  
-    // -------------------
-    // Submódulo 2.3
-    // -------------------
-    const tbody4  = document.getElementById('tbody4');
-    const total4  = document.getElementById('total4');
-    const addBtn4 = document.getElementById('add-btn4');
-  
-    const recalc4 = () => {
-      let s = 0;
-      tbody4.querySelectorAll('tr:not(.total-row):not(#add-row-trigger4) .brl-format')
-        .forEach(i => s += parseNumber(i.getAttribute('data-value')));
-      formatBRL(total4, s);
-    }
-   
-    tbody4.querySelectorAll('.brl-format').forEach(i => formatBRL(i, 0));
-    tbody4.addEventListener('focusin', e => {
-      if (e.target.classList.contains('brl-format')) {
-        e.target.value = parseNumber(e.target.getAttribute('data-value')) || '';
-      }
-    });
-    tbody4.addEventListener('focusout', e => {
-      if (e.target.classList.contains('brl-format')) {
-        formatBRL(e.target, parseNumber(e.target.value));
+      // Your existing recalc functions (recalc1, recalc2, recalc3, recalc4, recalc5, recalc41, recalc42, recalc5ins, recalc6, updateSummary)
+      const tbody1 = document.getElementById('tbody1');
+      const total1 = document.getElementById('total1');
+      const addBtn1 = document.getElementById('add-btn1');
+      const recalc1 = () => {
+        let sum = 0;
+        tbody1.querySelectorAll('tr:not(.total-row):not(#add-row-trigger1) .brl-format').forEach(i => {
+          sum += parseNumber(i.getAttribute('data-value'));
+        });
+        formatBRL(total1, sum);
+        const subtotal21 = recalc2(sum);
+        const base22 = sum + subtotal21;
+        recalc3(base22);
         recalc4();
-      }
-    });
-    tbody4.addEventListener('click', e => {
-      if (e.target.classList.contains('remove-link')) {
-        e.target.closest('tr').remove();
-        recalc4();
-      }
-    });
-    addBtn4.addEventListener('click', () => {
-      const rows = tbody4.querySelectorAll('tr:not(.total-row):not(#add-row-trigger4)');
-      const last = rows[rows.length - 1].querySelector('td:first-child').textContent.charCodeAt(0);
-      const L    = String.fromCharCode(last + 1);
-      const tr   = document.createElement('tr');
-      tr.innerHTML = `<td>${L}</td>
-        <td><div style="display:flex;">
-              <input class="text-input" placeholder="Descrição...">
-              <span class="remove-link no-print">×</span>
-            </div></td>
-        <td><input class="brl-format" data-value="0"></td>`;
-      tbody4.insertBefore(tr, document.getElementById('add-row-trigger4'));
-      formatBRL(tr.querySelector('.brl-format'), 0);
-    });
-  
-  
-    // -------------------
-    // Módulo 3
-    // -------------------
-    const tbody5    = document.getElementById('tbody5');
-    const total5    = document.getElementById('total5');
-    const totalPct5 = document.getElementById('total-pct5');
-    const mod1Total = document.getElementById('total1');
-  
-    const calcFromPercent = (pctInput, brlInput) => {
-      const base = parseNumber(mod1Total.getAttribute('data-value'));
-      const pct  = parseNumber(pctInput.getAttribute('data-value'));
-      formatBRL(brlInput, base * (pct / 100));
-    };
-    const calcFromValue = (brlInput, pctInput) => {
-      const base = parseNumber(mod1Total.getAttribute('data-value'));
-      const val  = parseNumber(brlInput.value);
-      formatPct(pctInput, base ? (val / base) * 100 : 0);
-    };
-    const recalc5 = () => {
-      let sumVal = 0, sumPct = 0;
-      tbody5.querySelectorAll('tr:not(.total-row)').forEach(r => {
-        sumVal += parseNumber(r.querySelector('.brl-format').getAttribute('data-value'));
-        sumPct += parseNumber(r.querySelector('.percent-format').getAttribute('data-value'));
-      });
-      formatBRL(total5, sumVal);
-      formatPct(totalPct5, sumPct);
-    };
-    tbody5.querySelectorAll('tr:not(.total-row)').forEach(r => {
-      const brl = r.querySelector('.brl-format');
-      const pct = r.querySelector('.percent-format');
-      formatBRL(brl, 0);
-      formatPct(pct, 0);
-  
-      pct.addEventListener('focusin',  () => pct.value = parseNumber(pct.getAttribute('data-value')) || '');
-      pct.addEventListener('focusout', () => {
-        formatPct(pct, parseNumber(pct.value));
-        calcFromPercent(pct, brl);
         recalc5();
-      });
-      brl.addEventListener('focusin',  () => brl.value = parseNumber(brl.getAttribute('data-value')) || '');
-      brl.addEventListener('focusout', () => {
-        formatBRL(brl, parseNumber(brl.value));
-        calcFromValue(brl, pct);
-        recalc5();
-      });
-    });
-    mod1Total.addEventListener('change', () => {
-      tbody5.querySelectorAll('tr:not(.total-row)').forEach(r => {
-        const pct = r.querySelector('.percent-format');
-        if (parseNumber(pct.getAttribute('data-value')) > 0) {
-          calcFromPercent(pct, r.querySelector('.brl-format'));
+        recalc5ins();
+        const base4 = sum;
+        recalc41(base4);
+        recalc42();
+        recalc6();
+      };
+      tbody1.querySelectorAll('.brl-format').forEach(i => formatBRL(i, 0));
+      tbody1.addEventListener('focusin', e => {
+        if (e.target.classList.contains('brl-format')) {
+          e.target.value = parseNumber(e.target.getAttribute('data-value')) || '';
         }
       });
-      recalc5();
-    });
-  
-    // -------------------
-    // Módulo 4.1 - Ausências Legais (CORREÇÃO FINAL)
-    // -------------------
-    const tbody41    = document.getElementById('tbody41');
-    const totalPct41 = document.getElementById('total-pct41');
-    const total41    = document.getElementById('total41');
-    const addBtn41   = document.getElementById('add-btn41');
-    const propRow    = document.getElementById('prop-row');
-    const inc22Row   = document.getElementById('inc22-row');
-
-   function recalc41(base) {
-  const items = {};
-  let pctMat = 0;
-
-  const ausenciaRows = [...tbody41.querySelectorAll('tr')].filter(row => {
-    const letra = row.cells[0]?.textContent.trim();
-    return letra && /^[A-Z]$/.test(letra) && 
-           row.id !== 'subtotal-before-prop' && 
-           row.id !== 'prop-row' && 
-           row.id !== 'subtotal-before-22' && 
-           row.id !== 'inc22-row' && 
-           !row.classList.contains('total-row');
-  });
-  
-  // CORREÇÃO: Usar o valor atual do campo, não apenas data-value
-  ausenciaRows.forEach(row => {
-    const letra = row.cells[0].textContent.trim();
-    const pctInput = row.querySelector('.percent-format');
-    const brlInput = row.querySelector('.brl-format');
-    
-    // Usar o valor atual do campo (já formatado)
-    const pct = parseNumber(pctInput.getAttribute('data-value'));
-    const valor = base * (pct / 100);
-    
-    formatBRL(brlInput, valor);
-    items[letra] = { pct, valor };
-    if (letra === 'E') pctMat = pct;
-  });
-      
-      // 2. Calcular subtotal (todos os itens)
-      const subtotalPct = Object.values(items).reduce((sum, item) => sum + item.pct, 0);
-      const subtotalVal = Object.values(items).reduce((sum, item) => sum + item.valor, 0);
-      
-      // 3. Calcular proporcional (F) - Exceto maternidade (E)
-      const baseProporcional = subtotalPct - pctMat;
-      const pctProp = baseProporcional * (7 / 36);
-      const valProp = base * (pctProp / 100);
-      
-      // 4. Subtotal antes do 2.2 (todos itens + proporcional)
-      const subtotalAntes22Pct = subtotalPct + pctProp;
-      const subtotalAntes22Val = subtotalVal + valProp;
-      
-      // 5. Incidência do Submódulo 2.2 (G)
-      const pct22 = parseNumber(document.getElementById('total-pct3').getAttribute('data-value'));
-      const valInc22 = subtotalAntes22Val * (pct22 / 100);
-      
-      // 6. Total do Submódulo 4.1
-      const totalVal = subtotalAntes22Val + valInc22;
-      const totalPct = (totalVal / base) * 100;
-      
-      // Atualizar campos na interface
-      formatPct(document.getElementById('pct41_subtotal'), subtotalPct);
-      formatBRL(document.getElementById('subtotal41_before_prop'), subtotalVal);
-      formatPct(document.getElementById('pct41_prop'), pctProp);
-      formatBRL(document.getElementById('val41_prop'), valProp);
-      formatPct(document.getElementById('pct41_subtotal_before22'), subtotalAntes22Pct);
-      formatBRL(document.getElementById('subtotal41_before_22'), subtotalAntes22Val);
-      formatPct(document.getElementById('pct41_inc22'), pct22);
-      formatBRL(document.getElementById('val41_inc22'), valInc22);
-      formatPct(document.getElementById('total-pct41'), totalPct);
-      formatBRL(document.getElementById('total41'), totalVal);
-    }
-
-    // Evento de clique para remover linhas no submódulo 4.1
-    tbody41.addEventListener('click', e => {
-      if (e.target.classList.contains('remove-link')) {
-        e.target.closest('tr').remove();
+      tbody1.addEventListener('focusout', e => {
+        if (e.target.classList.contains('brl-format')) {
+          formatBRL(e.target, parseNumber(e.target.value));
+          recalc1();
+        }
+      });
+      tbody1.addEventListener('click', e => {
+        if (e.target.classList.contains('remove-link')) {
+          e.target.closest('tr').remove();
+          recalc1();
+        }
+      });
+      addBtn1.addEventListener('click', () => {
+        const rows = tbody1.querySelectorAll('tr:not(.total-row):not(#add-row-trigger1)');
+        const last = rows[rows.length - 1].querySelector('td:first-child').textContent.charCodeAt(0);
+        const L = String.fromCharCode(last + 1);
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${L}</td>
+          <td><div style="display:flex;">
+                <input class="text-input" placeholder="Descrição...">
+                <span class="remove-link no-print">×</span>
+              </div></td>
+          <td><input class="brl-format" data-value="0"></td>`;
+        tbody1.insertBefore(tr, document.getElementById('add-row-trigger1'));
+        formatBRL(tr.querySelector('.brl-format'), 0);
+      });
+      const tbody2 = document.getElementById('tbody2');
+      const total2 = document.getElementById('total2');
+      const total2Pct = document.getElementById('total2-pct');
+      [...tbody2.querySelectorAll('tr')].slice(0, 2).forEach(r => {
+        const pctEl = r.querySelector('.percent-format');
+        formatPct(pctEl, parseNumber(pctEl.getAttribute('data-value')));
+      });
+      function recalc2(base) {
+        const v1 = base / 12;
+        const v2 = base / 36;
+        formatBRL(tbody2.rows[0].cells[3].querySelector('.brl-format'), v1);
+        formatBRL(tbody2.rows[1].cells[3].querySelector('.brl-format'), v2);
+        const s = v1 + v2;
+        formatBRL(total2, s);
+        const pctTotal = 8.33 + 2.78;
+        formatPct(total2Pct, pctTotal);
+        return s;
+      }
+      const tbody3 = document.getElementById('tbody3');
+      const total3 = document.getElementById('total3');
+      const totalPct3 = document.getElementById('total-pct3');
+      const rows3 = [...tbody3.querySelectorAll('tr')].slice(0, 8);
+      rows3.forEach(r => formatPct(r.querySelector('.percent-format'), parseNumber(r.querySelector('.percent-format').getAttribute('data-value'))));
+      function recalc3(base) {
+        let sum = 0, p = 0;
+        rows3.forEach(r => {
+          const pct = parseNumber(r.querySelector('.percent-format').getAttribute('data-value'));
+          const val = base * pct / 100;
+          formatBRL(r.querySelector('.brl-format'), val);
+          sum += val;
+          p += pct;
+        });
+        formatPct(totalPct3, p);
+        formatBRL(total3, sum);
+        return sum;
+      }
+      rows3.forEach(r => {
+        const pct = r.querySelector('.percent-format');
+        pct.addEventListener('focusin', () => {
+          pct.value = parseNumber(pct.getAttribute('data-value')) || '';
+        });
+        pct.addEventListener('focusout', () => {
+          let v = parseNumber(pct.value);
+          if (isNaN(v) || pct.value === '') v = parseNumber(pct.getAttribute('data-value')) || 0;
+          formatPct(pct, v);
+          recalc1();
+        });
+      });
+      const tbody4 = document.getElementById('tbody4');
+      const total4 = document.getElementById('total4');
+      const addBtn4 = document.getElementById('add-btn4');
+      const recalc4 = () => {
+        let s = 0;
+        tbody4.querySelectorAll('tr:not(.total-row):not(#add-row-trigger4) .brl-format').forEach(i => s += parseNumber(i.getAttribute('data-value')));
+        formatBRL(total4, s);
+      };
+      tbody4.querySelectorAll('.brl-format').forEach(i => formatBRL(i, 0));
+      tbody4.addEventListener('focusin', e => {
+        if (e.target.classList.contains('brl-format')) {
+          e.target.value = parseNumber(e.target.getAttribute('data-value')) || '';
+        }
+      });
+      tbody4.addEventListener('focusout', e => {
+        if (e.target.classList.contains('brl-format')) {
+          formatBRL(e.target, parseNumber(e.target.value));
+          recalc4();
+        }
+      });
+      tbody4.addEventListener('click', e => {
+        if (e.target.classList.contains('remove-link')) {
+          e.target.closest('tr').remove();
+          recalc4();
+        }
+      });
+      addBtn4.addEventListener('click', () => {
+        const rows = tbody4.querySelectorAll('tr:not(.total-row):not(#add-row-trigger4)');
+        const last = rows[rows.length - 1].querySelector('td:first-child').textContent.charCodeAt(0);
+        const L = String.fromCharCode(last + 1);
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${L}</td>
+          <td><div style="display:flex;">
+                <input class="text-input" placeholder="Descrição...">
+                <span class="remove-link no-print">×</span>
+              </div></td>
+          <td><input class="brl-format" data-value="0"></td>`;
+        tbody4.insertBefore(tr, document.getElementById('add-row-trigger4'));
+        formatBRL(tr.querySelector('.brl-format'), 0);
+      });
+      const tbody5 = document.getElementById('tbody5');
+      const total5 = document.getElementById('total5');
+      const totalPct5 = document.getElementById('total-pct5');
+      const mod1Total = document.getElementById('total1');
+      const calcFromPercent = (pctInput, brlInput) => {
+        const base = parseNumber(mod1Total.getAttribute('data-value'));
+        const pct = parseNumber(pctInput.getAttribute('data-value'));
+        formatBRL(brlInput, base * (pct / 100));
+      };
+      const calcFromValue = (brlInput, pctInput) => {
+        const base = parseNumber(mod1Total.getAttribute('data-value'));
+        const val = parseNumber(brlInput.value);
+        formatPct(pctInput, base ? (val / base) * 100 : 0);
+      };
+      const recalc5 = () => {
+        let sumVal = 0, sumPct = 0;
+        tbody5.querySelectorAll('tr:not(.total-row)').forEach(r => {
+          sumVal += parseNumber(r.querySelector('.brl-format').getAttribute('data-value'));
+          sumPct += parseNumber(r.querySelector('.percent-format').getAttribute('data-value'));
+        });
+        formatBRL(total5, sumVal);
+        formatPct(totalPct5, sumPct);
+      };
+      tbody5.querySelectorAll('tr:not(.total-row)').forEach(r => {
+        const brl = r.querySelector('.brl-format');
+        const pct = r.querySelector('.percent-format');
+        formatBRL(brl, 0);
+        formatPct(pct, 0);
+        pct.addEventListener('focusin', () => pct.value = parseNumber(pct.getAttribute('data-value')) || '');
+        pct.addEventListener('focusout', () => {
+          formatPct(pct, parseNumber(pct.value));
+          calcFromPercent(pct, brl);
+          recalc5();
+        });
+        brl.addEventListener('focusin', () => brl.value = parseNumber(brl.getAttribute('data-value')) || '');
+        brl.addEventListener('focusout', () => {
+          formatBRL(brl, parseNumber(brl.value));
+          calcFromValue(brl, pct);
+          recalc5();
+        });
+      });
+      mod1Total.addEventListener('change', () => {
+        tbody5.querySelectorAll('tr:not(.total-row)').forEach(r => {
+          const pct = r.querySelector('.percent-format');
+          if (parseNumber(pct.getAttribute('data-value')) > 0) {
+            calcFromPercent(pct, r.querySelector('.brl-format'));
+          }
+        });
+        recalc5();
+      });
+      const tbody41 = document.getElementById('tbody41');
+      const totalPct41 = document.getElementById('total-pct41');
+      const total41 = document.getElementById('total41');
+      const addBtn41 = document.getElementById('add-btn41');
+      const propRow = document.getElementById('prop-row');
+      const inc22Row = document.getElementById('inc22-row');
+      function recalc41(base) {
+        const items = {};
+        let pctMat = 0;
+        const ausenciaRows = [...tbody41.querySelectorAll('tr')].filter(row => {
+          const letra = row.cells[0]?.textContent.trim();
+          return letra && /^[A-Z]$/.test(letra) && 
+                 row.id !== 'subtotal-before-prop' && 
+                 row.id !== 'prop-row' && 
+                 row.id !== 'subtotal-before-22' && 
+                 row.id !== 'inc22-row' && 
+                 !row.classList.contains('total-row');
+        });
+        ausenciaRows.forEach(row => {
+          const letra = row.cells[0].textContent.trim();
+          const pctInput = row.querySelector('.percent-format');
+          const brlInput = row.querySelector('.brl-format');
+          const pct = parseNumber(pctInput.getAttribute('data-value'));
+          const valor = base * (pct / 100);
+          formatBRL(brlInput, valor);
+          items[letra] = { pct, valor };
+          if (letra === 'E') pctMat = pct;
+        });
+        const subtotalPct = Object.values(items).reduce((sum, item) => sum + item.pct, 0);
+        const subtotalVal = Object.values(items).reduce((sum, item) => sum + item.valor, 0);
+        const baseProporcional = subtotalPct - pctMat;
+        const pctProp = baseProporcional * (7 / 36);
+        const valProp = base * (pctProp / 100);
+        const subtotalAntes22Pct = subtotalPct + pctProp;
+        const subtotalAntes22Val = subtotalVal + valProp;
+        const pct22 = parseNumber(document.getElementById('total-pct3').getAttribute('data-value'));
+        const valInc22 = subtotalAntes22Val * (pct22 / 100);
+        const totalVal = subtotalAntes22Val + valInc22;
+        const totalPct = (totalVal / base) * 100;
+        formatPct(document.getElementById('pct41_subtotal'), subtotalPct);
+        formatBRL(document.getElementById('subtotal41_before_prop'), subtotalVal);
+        formatPct(document.getElementById('pct41_prop'), pctProp);
+        formatBRL(document.getElementById('val41_prop'), valProp);
+        formatPct(document.getElementById('pct41_subtotal_before22'), subtotalAntes22Pct);
+        formatBRL(document.getElementById('subtotal41_before_22'), subtotalAntes22Val);
+        formatPct(document.getElementById('pct41_inc22'), pct22);
+        formatBRL(document.getElementById('val41_inc22'), valInc22);
+        formatPct(document.getElementById('total-pct41'), totalPct);
+        formatBRL(document.getElementById('total41'), totalVal);
+      }
+      tbody41.addEventListener('click', e => {
+        if (e.target.classList.contains('remove-link')) {
+          e.target.closest('tr').remove();
+          recalc1();
+        }
+      });
+      tbody41.addEventListener('focusout', e => {
+        if (e.target.classList.contains('percent-format') && !e.target.classList.contains('fixed-percent')) {
+          const v = parseNumber(e.target.value);
+          formatPct(e.target, v);
+          recalc1();
+        }
+      });
+      addBtn41.addEventListener('click', () => {
+        const letras = [...tbody41.querySelectorAll('tr')].map(r => r.cells[0].textContent.trim()).filter(t => /^[A-Z]$/.test(t) && t !== 'F' && t !== 'G');
+        let lastCode = letras.length > 0 ? letras[letras.length - 1].charCodeAt(0) : 'E'.charCodeAt(0);
+        let nextCode = lastCode + 1;
+        if (lastCode === 'E'.charCodeAt(0)) { nextCode = 'H'.charCodeAt(0); } else if (nextCode === 'F'.charCodeAt(0) || nextCode === 'G'.charCodeAt(0)) { nextCode = 'H'.charCodeAt(0); }
+        const next = String.fromCharCode(nextCode);
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${next}</td>
+          <td><div style="display:flex;">
+            <input class="text-input" placeholder="Descrição...">
+            <span class="remove-link no-print">×</span>
+          </div></td>
+          <td><input class="percent-format" data-value="0"></td>
+          <td><input class="brl-format" data-value="0" readonly></td>`;
+        tbody41.insertBefore(tr, document.getElementById('subtotal-before-prop'));
+        formatPct(tr.querySelector('.percent-format'), 0);
+        formatBRL(tr.querySelector('.brl-format'), 0);
         recalc1();
+      });
+      const tbody42 = document.getElementById('tbody42');
+      const total42 = document.getElementById('total42');
+      function recalc42() {
+        let s = 0;
+        tbody42.querySelectorAll('tr:not(.total-row) .brl-format').forEach(i => {
+          s += parseNumber(i.getAttribute('data-value'));
+        });
+        formatBRL(total42, s);
+        return s;
       }
-    });
-
-    // Event listeners para campos editáveis
-    tbody41.addEventListener('focusout', e => {
-  if (e.target.classList.contains('percent-format') && !e.target.classList.contains('fixed-percent')) {
-    const v = parseNumber(e.target.value);
-    formatPct(e.target, v);
-    recalc1(); // Disparar recálculo completo
-  }
-});
-
-    // Adicionar linha extra
-    addBtn41.addEventListener('click', () => {
-      // 1) lista todas as letras existentes (coluna 0)
-      const letras = [...tbody41.querySelectorAll('tr')]
-        .map(r => r.cells[0].textContent.trim())
-        .filter(t => /^[A-Z]$/.test(t) && 
-                     t !== 'F' && // Ignorar linha do proporcional
-                     t !== 'G');  // Ignorar linha da incidência
-      
-      // 2) última letra + 1, pulando F e G
-      let lastCode = letras.length > 0 ? 
-        letras[letras.length - 1].charCodeAt(0) : 
-        'E'.charCodeAt(0);
-      
-      // Pular F e G
-      let nextCode = lastCode + 1;
-      if (lastCode === 'E'.charCodeAt(0)) {
-        nextCode = 'H'.charCodeAt(0);
-      } else if (nextCode === 'F'.charCodeAt(0) || nextCode === 'G'.charCodeAt(0)) {
-        nextCode = 'H'.charCodeAt(0);
+      tbody42.querySelectorAll('.brl-format').forEach(i => formatBRL(i, 0));
+      tbody42.addEventListener('focusin', e => {
+        if (e.target.classList.contains('brl-format')) {
+          e.target.value = parseNumber(e.target.getAttribute('data-value')) || '';
+        }
+      });
+      tbody42.addEventListener('focusout', e => {
+        if (e.target.classList.contains('brl-format')) {
+          formatBRL(e.target, parseNumber(e.target.value));
+          recalc42();
+          recalc1();
+        }
+      });
+      const tbody5ins = document.getElementById('tbody5ins');
+      const total5ins = document.getElementById('total5ins');
+      const addBtn5ins = document.getElementById('add-btn5ins');
+      function recalc5ins() {
+        let sum = 0;
+        tbody5ins.querySelectorAll('tr:not(.total-row):not(#add-row-trigger5ins) .brl-format').forEach(i => sum += parseNumber(i.getAttribute('data-value')));
+        formatBRL(total5ins, sum);
       }
-      
-      const next = String.fromCharCode(nextCode);
-      
-      // 3) monta a linha
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${next}</td>
-        <td><div style="display:flex;">
-          <input class="text-input" placeholder="Descrição...">
-          <span class="remove-link no-print">×</span>
-        </div></td>
-        <td><input class="percent-format" data-value="0"></td>
-        <td><input class="brl-format" data-value="0" readonly></td>`;
-      
-      // 4) insere antes da linha de subtotal
-      tbody41.insertBefore(tr, document.getElementById('subtotal-before-prop'));
-      
-      // 5) formata e recalc
-      formatPct(tr.querySelector('.percent-format'), 0);
-      formatBRL(tr.querySelector('.brl-format'), 0);
+      tbody5ins.querySelectorAll('.brl-format').forEach(i => formatBRL(i, 0));
+      tbody5ins.addEventListener('click', e => {
+        if (e.target.classList.contains('remove-link')) {
+          e.target.closest('tr').remove();
+          recalc5ins();
+          recalc1();
+        }
+      });
+      tbody5ins.addEventListener('focusout', e => {
+        if (e.target.classList.contains('brl-format')) {
+          formatBRL(e.target, parseNumber(e.target.value));
+          recalc5ins();
+          recalc1();
+        }
+      });
+      addBtn5ins.addEventListener('click', () => {
+        const rows = tbody5ins.querySelectorAll('tr:not(.total-row):not(#add-row-trigger5ins)');
+        const last = rows[rows.length - 1].querySelector('td:first-child').textContent.charCodeAt(0);
+        const L = String.fromCharCode(last + 1);
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${L}</td>
+          <td><div style="display:flex;">
+                <input class="text-input" placeholder="Descrição...">
+                <span class="remove-link no-print">×</span>
+              </div></td>
+          <td><input class="brl-format" data-value="0"></td>`;
+        tbody5ins.insertBefore(tr, document.getElementById('add-row-trigger5ins'));
+        formatBRL(tr.querySelector('.brl-format'), 0);
+      });
+      const tbody6 = document.getElementById('tbody6');
+      const rowCI = tbody6.querySelector('tr[data-item="A"]');
+      const rowL = tbody6.querySelector('tr[data-item="B"]');
+      const trib = [...tbody6.querySelectorAll('tr')].filter(r => ['ISS','COFINS','PIS'].includes(r.dataset.item));
+      const pctCI = rowCI.querySelector('.percent-format');
+      const brlCI = rowCI.querySelector('.brl-format');
+      const pctL = rowL.querySelector('.percent-format');
+      const brlL = rowL.querySelector('.brl-format');
+      [pctCI, pctL].forEach(inp => {
+        const rawPct = parseNumber(inp.getAttribute('data-value'));
+        formatPct(inp, rawPct);
+      });
+      [brlCI, brlL].forEach(inp => {
+        const rawVal = parseNumber(inp.getAttribute('data-value'));
+        formatBRL(inp, rawVal);
+      });
+      ['ISS','COFINS','PIS'].forEach(item => {
+        const pctEl = tbody6.querySelector(`tr[data-item="${item}"] .percent-format`);
+        const raw = parseNumber(pctEl.getAttribute('data-value'));
+        formatPct(pctEl, raw);
+        const brlEl = tbody6.querySelector(`tr[data-item="${item}"] .brl-format`);
+        formatBRL(brlEl, 0);
+      });
+      function recalc6() {
+        const t1 = parseNumber(document.getElementById('total1').getAttribute('data-value'));
+        const t21 = parseNumber(document.getElementById('total2').getAttribute('data-value'));
+        const t22 = parseNumber(document.getElementById('total3').getAttribute('data-value'));
+        const t23 = parseNumber(document.getElementById('total4').getAttribute('data-value'));
+        const t3 = parseNumber(document.getElementById('total5').getAttribute('data-value'));
+        const t41 = parseNumber(document.getElementById('total41').getAttribute('data-value'));
+        const t42 = parseNumber(document.getElementById('total42').getAttribute('data-value'));
+        const t5 = parseNumber(document.getElementById('total5ins').getAttribute('data-value'));
+        const baseCI = t1 + t21 + t22 + t23 + t3 + t41 + t42 + t5;
+        const pctCIv = parseNumber(pctCI.getAttribute('data-value'));
+        const valCI = pctCIv > 0 ? baseCI * pctCIv / 100 : parseNumber(brlCI.getAttribute('data-value'));
+        formatBRL(brlCI, valCI);
+        formatPct(pctCI, baseCI > 0 ? (valCI / baseCI) * 100 : 0);
+        const baseL = baseCI + valCI;
+        const pctLv = parseNumber(pctL.getAttribute('data-value'));
+        const valL = pctLv > 0 ? baseL * pctLv / 100 : parseNumber(brlL.getAttribute('data-value'));
+        formatBRL(brlL, valL);
+        formatPct(pctL, baseL > 0 ? (valL / baseL) * 100 : 0);
+        const soma = baseL + valL;
+        const tribInputs = [...tbody6.querySelectorAll('tr')].filter(r => ['ISS','COFINS','PIS'].includes(r.dataset.item)).map(r => {
+          const pctInput = r.querySelector('.percent-format');
+          const brlInput = r.querySelector('.brl-format');
+          const pct = parseNumber(pctInput.getAttribute('data-value'));
+          return { pctInput, brlInput, pct };
+        });
+        const somaPctTrib = tribInputs.reduce((sum, t) => sum + t.pct, 0);
+        tribInputs.forEach(({ pctInput, brlInput, pct }) => {
+          const aliquota = pct / 100;
+          const denominador = 1 - somaPctTrib / 100;
+          const valor = aliquota > 0 ? (soma * aliquota) / denominador : 0;
+          formatBRL(brlInput, valor);
+        });
+        const pctFields6 = [pctCI, pctL, ...tribInputs.map(t => t.pctInput)];
+        const totalPct6 = pctFields6.map(el => parseNumber(el.getAttribute('data-value'))).reduce((a, b) => a + b, 0);
+        formatPct(document.getElementById('total-pct6'), totalPct6);
+        const valFields6 = [brlCI, brlL, ...tribInputs.map(t => t.brlInput)];
+        const totalVal6 = valFields6.map(el => parseNumber(el.getAttribute('data-value'))).reduce((a, b) => a + b, 0);
+        formatBRL(document.getElementById('total6'), totalVal6);
+        const ci = parseNumber(brlCI.getAttribute('data-value'));
+        const lucro = parseNumber(brlL.getAttribute('data-value'));
+        const tributos = tribInputs.map(t => parseNumber(t.brlInput.getAttribute('data-value'))).reduce((a, b) => a + b, 0);
+        const total6 = ci + lucro + tributos;
+        formatBRL(document.getElementById('sum6'), total6);
+        updateSummary();
+      }
+      function updateSummary() {
+        const v1 = parseNumber(document.getElementById('total1').getAttribute('data-value'));
+        const v21 = parseNumber(document.getElementById('total2').getAttribute('data-value'));
+        const v22 = parseNumber(document.getElementById('total3').getAttribute('data-value'));
+        const v23 = parseNumber(document.getElementById('total4').getAttribute('data-value'));
+        const v2 = v21 + v22 + v23;
+        const v3 = parseNumber(document.getElementById('total5').getAttribute('data-value'));
+        const v4 = parseNumber(document.getElementById('total41').getAttribute('data-value')) + parseNumber(document.getElementById('total42').getAttribute('data-value'));
+        const v5 = parseNumber(document.getElementById('total5ins').getAttribute('data-value'));
+        const v6 = parseNumber(document.getElementById('sum6').getAttribute('data-value'));
+        formatBRL(document.getElementById('sum1'), v1);
+        formatBRL(document.getElementById('sum2'), v2);
+        formatBRL(document.getElementById('sum3'), v3);
+        formatBRL(document.getElementById('sum4'), v4);
+        formatBRL(document.getElementById('sum5'), v5);
+        const subtotal = v1 + v2 + v3 + v4 + v5;
+        const totalEmp = subtotal + v6;
+        formatBRL(document.getElementById('subtotal'), subtotal);
+        formatBRL(document.getElementById('totalEmployee'), totalEmp);
+        const nEmp = parseInt(document.getElementById('numEmployees').value) || 1;
+        const monthlyTotal = totalEmp * nEmp;
+        formatBRL(document.getElementById('monthlyTotal'), monthlyTotal);
+        const months = parseInt(document.getElementById('contractMonths').value) || 12;
+        formatBRL(document.getElementById('contractTotal'), monthlyTotal * months);
+      }
+      document.getElementById('numEmployees').addEventListener('input', updateSummary);
+      document.getElementById('contractMonths').addEventListener('input', updateSummary);
+      const pctFields6 = document.querySelectorAll('#tbody6 .percent-format');
+      const brlFields6 = document.querySelectorAll('#tbody6 tr[data-item="A"] .brl-format, #tbody6 tr[data-item="B"] .brl-format');
+      [...pctFields6, ...brlFields6].forEach(inp => {
+        inp.addEventListener('focusin', () => {
+          inp.value = parseNumber(inp.getAttribute('data-value')) || '';
+        });
+        inp.addEventListener('focusout', () => {
+          if (inp.classList.contains('percent-format')) {
+            formatPct(inp, parseNumber(inp.value));
+          } else {
+            formatBRL(inp, parseNumber(inp.value));
+          }
+          recalc6();
+        });
+      });
+      // Modified collectItems to return flat values with descriptions as keys
+      function collectItems(tbodyId) {
+        const items = {};
+        const tbody = document.getElementById(tbodyId);
+        tbody.querySelectorAll('tr:not(.total-row):not([id^="add-row-trigger"]):not(.subtotal-row)').forEach(tr => {
+          const descEl = tr.cells[1].querySelector('.text-input') || tr.cells[1];
+          const desc = descEl.value || descEl.textContent.trim();
+          const brlEl = tr.querySelector('.brl-format');
+          const value = brlEl ? parseNumber(brlEl.getAttribute('data-value')) : 0;
+          if (desc && value !== 0) { // Only include non-zero values
+            items[desc] = value;
+          }
+        });
+        return items;
+      }
+      // Modified sendToGoogleSheets to flatten data
+      async function sendToGoogleSheets() {
+        const data = {
+          module1: collectItems('tbody1'),
+          module2_1: collectItems('tbody2'),
+          module2_2: collectItems('tbody3'),
+          module2_3: collectItems('tbody4'),
+          module3: collectItems('tbody5'),
+          module4_1: collectItems('tbody41'),
+          module4_2: collectItems('tbody42'),
+          module5: collectItems('tbody5ins'),
+          module6: collectItems('tbody6'),
+          total1: parseNumber(document.getElementById('total1').getAttribute('data-value')),
+          total2_1: parseNumber(document.getElementById('total2').getAttribute('data-value')),
+          total2_2: parseNumber(document.getElementById('total3').getAttribute('data-value')),
+          total2_3: parseNumber(document.getElementById('total4').getAttribute('data-value')),
+          total3: parseNumber(document.getElementById('total5').getAttribute('data-value')),
+          total4_1: parseNumber(document.getElementById('total41').getAttribute('data-value')),
+          total4_2: parseNumber(document.getElementById('total42').getAttribute('data-value')),
+          total5: parseNumber(document.getElementById('total5ins').getAttribute('data-value')),
+          total6: parseNumber(document.getElementById('total6').getAttribute('data-value')),
+          subtotal: parseNumber(document.getElementById('subtotal').getAttribute('data-value')),
+          totalEmployee: parseNumber(document.getElementById('totalEmployee').getAttribute('data-value')),
+          numEmployees: parseInt(document.getElementById('numEmployees').value) || 1,
+          monthlyTotal: parseNumber(document.getElementById('monthlyTotal').getAttribute('data-value')),
+          contractMonths: parseInt(document.getElementById('contractMonths').value) || 12,
+          contractTotal: parseNumber(document.getElementById('contractTotal').getAttribute('data-value'))
+        };
+        try {
+          const response = await fetch('https://script.google.com/macros/s/AKfycbxFyQyMKKL26-ekNQ3DbmSjcatj9Vi4sNNAvfpHSTNZH3EIyMRLh8PMkacQBzV7XxpP/exec', {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain' },
+            body: JSON.stringify(data)
+          });
+          const result = await response.json();
+          if (result.status !== 'success') {
+            console.error('Erro ao enviar para Google Sheets:', result);
+          }
+        } catch (error) {
+          console.error('Falha na integração:', error);
+        }
+      }
+      document.getElementById('gen-pdf').addEventListener('click', async () => {
+        await sendToGoogleSheets();
+        const inputsToReplace = [];
+        const replaceInputs = selector => {
+          document.querySelectorAll(selector).forEach(input => {
+            const span = document.createElement('span');
+            span.textContent = input.value || input.placeholder || '';
+            span.style.whiteSpace = 'nowrap';
+            input.style.display = 'none';
+            input.parentNode.insertBefore(span, input.nextSibling);
+            inputsToReplace.push({ input, span });
+          });
+        };
+        replaceInputs('input.brl-format');
+        replaceInputs('input.percent-format');
+        replaceInputs('input.text-input');
+        window.print();
+        inputsToReplace.forEach(({ input, span }) => {
+          span.remove();
+          input.style.display = '';
+        });
+      });
       recalc1();
     });
-
-    // 4.2 Intrajornada
-    const tbody42 = document.getElementById('tbody42');
-    const total42 = document.getElementById('total42');
-    function recalc42() {
-      let s = 0;
-      tbody42.querySelectorAll('tr:not(.total-row) .brl-format').forEach(i => {
-        s += parseNumber(i.getAttribute('data-value'));
-      });
-      formatBRL(total42, s);
-      return s;
-    }
-    tbody42.querySelectorAll('.brl-format').forEach(i => formatBRL(i, 0));
-    tbody42.addEventListener('focusin', e => {
-      if (e.target.classList.contains('brl-format')) {
-        e.target.value = parseNumber(e.target.getAttribute('data-value')) || '';
-      }
-    });
-    tbody42.addEventListener('focusout', e => {
-      if (e.target.classList.contains('brl-format')) {
-        formatBRL(e.target, parseNumber(e.target.value));
-        recalc42();
-        recalc1();
-      }
-    });
-    
-    // Módulo 5
-    const tbody5ins = document.getElementById('tbody5ins');
-const total5ins = document.getElementById('total5ins');
-const addBtn5ins = document.getElementById('add-btn5ins'); // Novo botão
-
-function recalc5ins() {
-  let sum = 0;
-  tbody5ins.querySelectorAll('tr:not(.total-row):not(#add-row-trigger5ins) .brl-format')
-    .forEach(i => sum += parseNumber(i.getAttribute('data-value')));
-  formatBRL(total5ins, sum);
-}
-
-tbody5ins.querySelectorAll('.brl-format').forEach(i => formatBRL(i,0));
-
-// Novo evento de clique para remover linhas
-tbody5ins.addEventListener('click', e => {
-  if (e.target.classList.contains('remove-link')) {
-    e.target.closest('tr').remove();
-    recalc5ins();
-    recalc1();
-  }
-});
-
-// Evento modificado para evitar duplicação
-tbody5ins.addEventListener('focusout', e => {
-  if (e.target.classList.contains('brl-format')) {
-    formatBRL(e.target, parseNumber(e.target.value));
-    recalc5ins(); // Atualiza apenas o módulo 5
-    recalc1();    // Atualiza tudo (incluindo módulo 6)
-  }
-});
-
-// Função para adicionar nova linha
-addBtn5ins.addEventListener('click', () => {
-  const rows = tbody5ins.querySelectorAll('tr:not(.total-row):not(#add-row-trigger5ins)');
-  const last = rows[rows.length - 1].querySelector('td:first-child').textContent.charCodeAt(0);
-  const L = String.fromCharCode(last + 1);
-  const tr = document.createElement('tr');
-  tr.innerHTML = `<td>${L}</td>
-    <td><div style="display:flex;">
-          <input class="text-input" placeholder="Descrição...">
-          <span class="remove-link no-print">×</span>
-        </div></td>
-    <td><input class="brl-format" data-value="0"></td>`;
-  tbody5ins.insertBefore(tr, document.getElementById('add-row-trigger5ins'));
-  formatBRL(tr.querySelector('.brl-format'), 0);
-});
-
-    // Módulo 6
-    const tbody6 = document.getElementById('tbody6');
-    const rowCI  = tbody6.querySelector('tr[data-item="A"]');      // Custos Indiretos
-    const rowL   = tbody6.querySelector('tr[data-item="B"]');      // Lucro
-    // Linhas de tributos (ISS, COFINS, PIS)
-  const trib = [...tbody6.querySelectorAll('tr')]
-    .filter(r => ['ISS','COFINS','PIS'].includes(r.dataset.item));
-
-  // Campos percentuais e valores do Módulo 6
-const pctCI = rowCI.querySelector('.percent-format');
-const brlCI = rowCI.querySelector('.brl-format');
-const pctL  = rowL.querySelector('.percent-format');
-const brlL  = rowL.querySelector('.brl-format');
-
-// — Inicia CI e Lucro com zero —  
-[pctCI, pctL].forEach(inp => {
-  const rawPct = parseNumber(inp.getAttribute('data-value'));
-  formatPct(inp, rawPct);
-});
-[brlCI, brlL].forEach(inp => {
-  const rawVal = parseNumber(inp.getAttribute('data-value'));
-  formatBRL(inp, rawVal);
-});
-
-// — Pré-formata alíquotas de ISS, COFINS e PIS conforme data-value —  
-['ISS','COFINS','PIS'].forEach(item => {
-  const pctEl = tbody6.querySelector(`tr[data-item="${item}"] .percent-format`);
-  const raw   = parseNumber(pctEl.getAttribute('data-value'));
-  formatPct(pctEl, raw);
-  const brlEl = tbody6.querySelector(`tr[data-item="${item}"] .brl-format`);
-  formatBRL(brlEl, 0);
-});
- 
-function recalc6() {
-  // — Totais de cada módulo ——
-  const t1   = parseNumber(document.getElementById('total1')  .getAttribute('data-value'));
-  const t21  = parseNumber(document.getElementById('total2')  .getAttribute('data-value'));
-  const t22  = parseNumber(document.getElementById('total3')  .getAttribute('data-value'));
-  const t23  = parseNumber(document.getElementById('total4')  .getAttribute('data-value'));
-  const t3   = parseNumber(document.getElementById('total5')  .getAttribute('data-value'));
-  const t41  = parseNumber(document.getElementById('total41').getAttribute('data-value'));
-  const t42  = parseNumber(document.getElementById('total42').getAttribute('data-value'));
-  const t5   = parseNumber(document.getElementById('total5ins').getAttribute('data-value'));
-
-  // — Cálculo de Custos Indiretos —
-  const baseCI = t1 + t21 + t22 + t23 + t3 + t41 + t42 + t5;
-  const pctCIv = parseNumber(pctCI.getAttribute('data-value'));
-  const valCI  = pctCIv > 0
-    ? baseCI * pctCIv / 100
-    : parseNumber(brlCI.getAttribute('data-value'));
-  formatBRL(brlCI, valCI);
-  formatPct(pctCI, baseCI > 0 ? (valCI / baseCI) * 100 : 0);
-
-  // — Cálculo de Lucro —
-  const baseL = baseCI + valCI;
-  const pctLv = parseNumber(pctL.getAttribute('data-value'));
-  const valL  = pctLv > 0
-    ? baseL * pctLv / 100
-    : parseNumber(brlL.getAttribute('data-value'));
-  formatBRL(brlL, valL);
-  formatPct(pctL, baseL > 0 ? (valL / baseL) * 100 : 0);
-
-  // — Novo bloco de Tributos —
-  // 1) Base sobre a qual incidem os tributos
- const soma = baseL + valL;
-
-  // 2) Captura percentuais e inputs de valor
-  const tribInputs = [...tbody6.querySelectorAll('tr')]
-    .filter(r => ['ISS','COFINS','PIS'].includes(r.dataset.item))
-    .map(r => {
-      const pctInput = r.querySelector('.percent-format');
-      const brlInput = r.querySelector('.brl-format');
-      const pct      = parseNumber(pctInput.getAttribute('data-value')); 
-      return { pctInput, brlInput, pct };
-    });
-
-  // 3) Soma de todas as alíquotas (ex.: 5 + 3 + 0.65 = 8.65)
-  const somaPctTrib = tribInputs.reduce((sum, t) => sum + t.pct, 0);
-
-  // 4) Aplica fórmula para cada tributo:
-  //    valor = (soma * (pct/100)) / (1 - somaPctTrib/100)
-  tribInputs.forEach(({ pctInput, brlInput, pct }) => {
-    const aliquota    = pct / 100;                 // ex.: 0.05
-    const denominador = 1 - somaPctTrib / 100;     // ex.: 0.9135
-    const valor       = aliquota > 0
-      ? (soma * aliquota) / denominador
-      : 0;
-    formatBRL(brlInput, valor);
-  });
-
-  // 6a) total de percentuais do módulo 6 (CI, Lucro, ISS, COFINS, PIS)
-  const pctFields6 = [pctCI, pctL, ...tribInputs.map(t=>t.pctInput)];
-  const totalPct6  = pctFields6
-    .map(el=>parseNumber(el.getAttribute('data-value')))
-    .reduce((a,b)=>a+b, 0);
-  formatPct(document.getElementById('total-pct6'), totalPct6);
-
-  // 6b) total de valores do módulo 6 (CI, Lucro, tributos)
-  const valFields6 = [brlCI, brlL, ...tribInputs.map(t=>t.brlInput)];
-  const totalVal6  = valFields6
-    .map(el=>parseNumber(el.getAttribute('data-value')))
-    .reduce((a,b)=>a+b, 0);
-  formatBRL(document.getElementById('total6'), totalVal6);
-
-  // 7) calcula um total6 somando CI + Lucro + cada tributo:
-  const ci       = parseNumber(brlCI.getAttribute('data-value'));
-  const lucro    = parseNumber(brlL .getAttribute('data-value'));
-  const tributos = tribInputs
-    .map(t => parseNumber(t.brlInput.getAttribute('data-value')))
-    .reduce((a, b) => a + b, 0);
-  const total6   = ci + lucro + tributos;
-
-  // 8) joga esse valor na célula de resumo “F”:
-  formatBRL(document.getElementById('sum6'), total6);
-
-  // somente depois chama updateSummary()
-  updateSummary();
-}
-
-function updateSummary() {
-    // Valores dos módulos
-    const v1 = parseNumber(document.getElementById('total1').getAttribute('data-value'));
-    
-    // Módulo 2 agora soma todos os submódulos 2.1, 2.2 e 2.3
-    const v21 = parseNumber(document.getElementById('total2').getAttribute('data-value')); // Submódulo 2.1
-    const v22 = parseNumber(document.getElementById('total3').getAttribute('data-value')); // Submódulo 2.2
-    const v23 = parseNumber(document.getElementById('total4').getAttribute('data-value')); // Submódulo 2.3
-    const v2 = v21 + v22 + v23;
-    
-    const v3 = parseNumber(document.getElementById('total5').getAttribute('data-value')); // Módulo 3
-    const v4 = parseNumber(document.getElementById('total41').getAttribute('data-value')) + 
-               parseNumber(document.getElementById('total42').getAttribute('data-value')); // Módulo 4
-    const v5 = parseNumber(document.getElementById('total5ins').getAttribute('data-value')); // Módulo 5
-    const v6 = parseNumber(document.getElementById('sum6').getAttribute('data-value')); // Módulo 6
-
-    // Preenche totais parciais
-    formatBRL(document.getElementById('sum1'), v1);
-    formatBRL(document.getElementById('sum2'), v2);
-    formatBRL(document.getElementById('sum3'), v3);
-    formatBRL(document.getElementById('sum4'), v4);
-    formatBRL(document.getElementById('sum5'), v5);
-
-    // Calcula subtotal e total por empregado
-    const subtotal = v1 + v2 + v3 + v4 + v5;
-    const totalEmp = subtotal + v6;
-    
-    formatBRL(document.getElementById('subtotal'), subtotal);
-    formatBRL(document.getElementById('totalEmployee'), totalEmp);
-  
-    // Calcula valor mensal (total por empregado × quantidade)
-    const nEmp = parseInt(document.getElementById('numEmployees').value) || 1;
-    const monthlyTotal = totalEmp * nEmp;
-    formatBRL(document.getElementById('monthlyTotal'), monthlyTotal);
-    
-    // Calcula valor total do contrato (valor mensal × meses)
-    const months = parseInt(document.getElementById('contractMonths').value) || 12;
-    formatBRL(document.getElementById('contractTotal'), monthlyTotal * months);
-}
-
-// Adicione este listener para o novo campo
-document.getElementById('numEmployees').addEventListener('input', updateSummary);
-  document.getElementById('contractMonths').addEventListener('input', updateSummary);
-
-  // Vincula recalc6() aos campos do Módulo 6
-  const pctFields6 = document.querySelectorAll('#tbody6 .percent-format');
-  const brlFields6 = document.querySelectorAll(
-    '#tbody6 tr[data-item="A"] .brl-format, ' +
-    '#tbody6 tr[data-item="B"] .brl-format'
-  );
-  [...pctFields6, ...brlFields6].forEach(inp => {
-    inp.addEventListener('focusin', () => {
-      inp.value = parseNumber(inp.getAttribute('data-value')) || '';
-    });
-    inp.addEventListener('focusout', () => {
-      if (inp.classList.contains('percent-format')) {
-        formatPct(inp, parseNumber(inp.value));
-      } else {
-        formatBRL(inp, parseNumber(inp.value));
-      }
-      recalc6();
-    });
-  });
-
-    // Função auxiliar para coletar itens de um tbody (itens individuais)
-function collectItems(tbodyId, hasPct = false) {
-  const items = [];
-  const tbody = document.getElementById(tbodyId);
-  tbody.querySelectorAll('tr:not(.total-row):not([id^="add-row-trigger"]):not(.subtotal-row)').forEach(tr => {
-    const descEl = tr.cells[1].querySelector('.text-input') || tr.cells[1];
-    const desc = descEl.value || descEl.textContent.trim();
-    const brlEl = tr.querySelector('.brl-format');
-    const value = brlEl ? parseNumber(brlEl.getAttribute('data-value')) : 0;
-    let pct = null;
-    if (hasPct) {
-      const pctEl = tr.querySelector('.percent-format');
-      pct = pctEl ? parseNumber(pctEl.getAttribute('data-value')) : null;
-    }
-    if (desc) {
-      items.push({ desc, value, pct });
-    }
-  });
-  return items;
-}
-
-// Função para enviar dados ao Google Sheets
-async function sendToGoogleSheets() {
-  const data = {
-    module1_items: collectItems('tbody1'),                  // Módulo 1 (sem %)
-    module2_1_items: collectItems('tbody2', true),          // Sub 2.1 (com %)
-    module2_2_items: collectItems('tbody3', true),          // Sub 2.2 (com %)
-    module2_3_items: collectItems('tbody4'),                // Sub 2.3 (sem %)
-    module3_items: collectItems('tbody5', true),            // Módulo 3 (com %)
-    module4_1_items: collectItems('tbody41', true),         // Sub 4.1 (com %, inclui F/G)
-    module4_2_items: collectItems('tbody42'),               // Sub 4.2 (sem %)
-    module5_items: collectItems('tbody5ins'),               // Módulo 5 (sem %)
-    module6_items: collectItems('tbody6', true),            // Módulo 6 (com %)
-    total1: parseNumber(document.getElementById('total1').getAttribute('data-value')),
-    total2_1: parseNumber(document.getElementById('total2').getAttribute('data-value')),
-    total2_2: parseNumber(document.getElementById('total3').getAttribute('data-value')),
-    total2_3: parseNumber(document.getElementById('total4').getAttribute('data-value')),
-    total3: parseNumber(document.getElementById('total5').getAttribute('data-value')),
-    total4_1: parseNumber(document.getElementById('total41').getAttribute('data-value')),
-    total4_2: parseNumber(document.getElementById('total42').getAttribute('data-value')),
-    total5: parseNumber(document.getElementById('total5ins').getAttribute('data-value')),
-    total6: parseNumber(document.getElementById('total6').getAttribute('data-value')),
-    subtotal: parseNumber(document.getElementById('subtotal').getAttribute('data-value')),
-    totalEmployee: parseNumber(document.getElementById('totalEmployee').getAttribute('data-value')),
-    numEmployees: parseInt(document.getElementById('numEmployees').value) || 1,
-    monthlyTotal: parseNumber(document.getElementById('monthlyTotal').getAttribute('data-value')),
-    contractMonths: parseInt(document.getElementById('contractMonths').value) || 12,
-    contractTotal: parseNumber(document.getElementById('contractTotal').getAttribute('data-value'))
-  };
-
-  try {
-    const response = await fetch('https://script.google.com/macros/s/AKfycbxFyQyMKKL26-ekNQ3DbmSjcatj9Vi4sNNAvfpHSTNZH3EIyMRLh8PMkacQBzV7XxpP/exec', {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },  // Changed from 'application/json'
-      body: JSON.stringify(data)
-    });
-    const result = await response.json();
-    if (result.status !== 'success') {
-      console.error('Erro ao enviar para Google Sheets');
-    }
-  } catch (error) {
-    console.error('Falha na integração:', error);
-  }
-}
-
-// Evento PDF modificado: envia para Sheets e depois imprime
-document.getElementById('gen-pdf').addEventListener('click', async () => {
-  await sendToGoogleSheets(); // Envia dados primeiro
-
-  const inputsToReplace = [];
-  const replaceInputs = selector => {
-    document.querySelectorAll(selector).forEach(input => {
-      const span = document.createElement('span');
-      span.textContent = input.value || input.placeholder || '';
-      span.style.whiteSpace = 'nowrap';
-      input.style.display = 'none';
-      input.parentNode.insertBefore(span, input.nextSibling);
-      inputsToReplace.push({ input, span });
-    });
-  };
-  replaceInputs('input.brl-format');
-  replaceInputs('input.percent-format');
-  replaceInputs('input.text-input');
-  window.print();
-  inputsToReplace.forEach(({ input, span }) => {
-    span.remove();
-    input.style.display = '';
-  });
-});
-
-// Inicialização
-recalc1();
-  });
   </script>
-  
-  </body>
+</body>
 </html>
