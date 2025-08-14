@@ -227,7 +227,7 @@
     </tbody>
   </table>
   
-  <!-- Módulo 2 -->
+  <!-- Módulo 2 (cabeçalho geral) -->
   <table>
     <thead>
       <tr><th colspan="4" class="module-title">Módulo 2 - Encargos e Benefícios Anuais, Mensais e Diários</th></tr>
@@ -1225,32 +1225,100 @@ document.getElementById('numEmployees').addEventListener('input', updateSummary)
     });
   });
 
-    // Evento PDF
-    document.getElementById('gen-pdf').addEventListener('click', () => {
-      const inputsToReplace = [];
-      const replaceInputs = selector => {
-        document.querySelectorAll(selector).forEach(input => {
-          const span = document.createElement('span');
-          span.textContent = input.value || input.placeholder || '';
-          span.style.whiteSpace = 'nowrap';
-          input.style.display = 'none';
-          input.parentNode.insertBefore(span, input.nextSibling);
-          inputsToReplace.push({ input, span });
-        });
-      };
-      replaceInputs('input.brl-format');
-      replaceInputs('input.percent-format');
-      replaceInputs('input.text-input');
-      window.print();
-      inputsToReplace.forEach(({ input, span }) => {
-        span.remove();
-        input.style.display = '';
-      });
-    });
+    // Função auxiliar para coletar itens de um tbody (itens individuais)
+function collectItems(tbodyId, hasPct = false) {
+  const items = [];
+  const tbody = document.getElementById(tbodyId);
+  tbody.querySelectorAll('tr:not(.total-row):not([id^="add-row-trigger"]):not(.subtotal-row)').forEach(tr => {
+    const descEl = tr.cells[1].querySelector('.text-input') || tr.cells[1];
+    const desc = descEl.value || descEl.textContent.trim();
+    const brlEl = tr.querySelector('.brl-format');
+    const value = brlEl ? parseNumber(brlEl.getAttribute('data-value')) : 0;
+    let pct = null;
+    if (hasPct) {
+      const pctEl = tr.querySelector('.percent-format');
+      pct = pctEl ? parseNumber(pctEl.getAttribute('data-value')) : null;
+    }
+    if (desc) {
+      items.push({ desc, value, pct });
+    }
+  });
+  return items;
+}
 
-    // Inicialização
-    recalc1();
+// Função para enviar dados ao Google Sheets
+async function sendToGoogleSheets() {
+  const data = {
+    module1_items: collectItems('tbody1'),                  // Módulo 1 (sem %)
+    module2_1_items: collectItems('tbody2', true),          // Sub 2.1 (com %)
+    module2_2_items: collectItems('tbody3', true),          // Sub 2.2 (com %)
+    module2_3_items: collectItems('tbody4'),                // Sub 2.3 (sem %)
+    module3_items: collectItems('tbody5', true),            // Módulo 3 (com %)
+    module4_1_items: collectItems('tbody41', true),         // Sub 4.1 (com %, inclui F/G)
+    module4_2_items: collectItems('tbody42'),               // Sub 4.2 (sem %)
+    module5_items: collectItems('tbody5ins'),               // Módulo 5 (sem %)
+    module6_items: collectItems('tbody6', true),            // Módulo 6 (com %)
+    total1: parseNumber(document.getElementById('total1').getAttribute('data-value')),
+    total2_1: parseNumber(document.getElementById('total2').getAttribute('data-value')),
+    total2_2: parseNumber(document.getElementById('total3').getAttribute('data-value')),
+    total2_3: parseNumber(document.getElementById('total4').getAttribute('data-value')),
+    total3: parseNumber(document.getElementById('total5').getAttribute('data-value')),
+    total4_1: parseNumber(document.getElementById('total41').getAttribute('data-value')),
+    total4_2: parseNumber(document.getElementById('total42').getAttribute('data-value')),
+    total5: parseNumber(document.getElementById('total5ins').getAttribute('data-value')),
+    total6: parseNumber(document.getElementById('total6').getAttribute('data-value')),
+    subtotal: parseNumber(document.getElementById('subtotal').getAttribute('data-value')),
+    totalEmployee: parseNumber(document.getElementById('totalEmployee').getAttribute('data-value')),
+    numEmployees: parseInt(document.getElementById('numEmployees').value) || 1,
+    monthlyTotal: parseNumber(document.getElementById('monthlyTotal').getAttribute('data-value')),
+    contractMonths: parseInt(document.getElementById('contractMonths').value) || 12,
+    contractTotal: parseNumber(document.getElementById('contractTotal').getAttribute('data-value'))
+  };
+
+  try {
+    const response = await fetch('SUA_URL_DO_APPS_SCRIPT', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    const result = await response.json();
+    if (result.status !== 'success') {
+      console.error('Erro ao enviar para Google Sheets');
+    }
+  } catch (error) {
+    console.error('Falha na integração:', error);
+  }
+}
+
+// Evento PDF modificado: envia para Sheets e depois imprime
+document.getElementById('gen-pdf').addEventListener('click', async () => {
+  await sendToGoogleSheets(); // Envia dados primeiro
+
+  const inputsToReplace = [];
+  const replaceInputs = selector => {
+    document.querySelectorAll(selector).forEach(input => {
+      const span = document.createElement('span');
+      span.textContent = input.value || input.placeholder || '';
+      span.style.whiteSpace = 'nowrap';
+      input.style.display = 'none';
+      input.parentNode.insertBefore(span, input.nextSibling);
+      inputsToReplace.push({ input, span });
+    });
+  };
+  replaceInputs('input.brl-format');
+  replaceInputs('input.percent-format');
+  replaceInputs('input.text-input');
+  window.print();
+  inputsToReplace.forEach(({ input, span }) => {
+    span.remove();
+    input.style.display = '';
+  });
+});
+
+// Inicialização
+recalc1();
   });
   </script>
-</body>
+  
+  </body>
 </html>
