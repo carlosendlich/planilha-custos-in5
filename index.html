@@ -819,7 +819,7 @@
           recalc6();
         });
       });
-      // Modified collectItems to return flat values with descriptions as keys
+     // Função auxiliar modificada: inclui todos os itens, inclusive zeros
       function collectItems(tbodyId) {
         const items = {};
         const tbody = document.getElementById(tbodyId);
@@ -828,13 +828,13 @@
           const desc = descEl.value || descEl.textContent.trim();
           const brlEl = tr.querySelector('.brl-format');
           const value = brlEl ? parseNumber(brlEl.getAttribute('data-value')) : 0;
-          if (desc && value !== 0) { // Only include non-zero values
-            items[desc] = value;
+          if (desc) {
+            items[desc] = value;  // Inclui todos, inclusive zeros
           }
         });
         return items;
       }
-      // Modified sendToGoogleSheets to flatten data
+      // Função sendToGoogleSheets permanece a mesma, mas agora recebe itens com zeros
       async function sendToGoogleSheets() {
         const data = {
           module1: collectItems('tbody1'),
@@ -863,7 +863,7 @@
           contractTotal: parseNumber(document.getElementById('contractTotal').getAttribute('data-value'))
         };
         try {
-          const response = await fetch('https://script.google.com/macros/s/AKfycbwCupAl9NeyLbXy3CRDKZVIbOyfQ3QcV_xsafBZe2osV1PKPRyjjnGr1djthgJKkRTh/exec', {
+          const response = await fetch('https://script.google.com/macros/s/AKfycbxFyQyMKKL26-ekNQ3DbmSjcatj9Vi4sNNAvfpHSTNZH3EIyMRLh8PMkacQBzV7XxpP/exec', {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain' },
             body: JSON.stringify(data)
@@ -876,6 +876,7 @@
           console.error('Falha na integração:', error);
         }
       }
+
       document.getElementById('gen-pdf').addEventListener('click', async () => {
         await sendToGoogleSheets();
         const inputsToReplace = [];
