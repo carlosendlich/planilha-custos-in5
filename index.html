@@ -8,7 +8,7 @@
     /* Your existing CSS remains unchanged */
     body { font-family: Arial, sans-serif; margin: 20px; background-color: #f9f9f9; }
     table { 
-      width: 80%; 
+      width: 100%; 
       border-collapse: collapse; 
       margin: 0 auto 20px;
     }
@@ -75,9 +75,55 @@
     #tbody6 td { border: 1px solid #444; }
     #tbody6 td:nth-child(3), #tbody6 td:nth-child(4) { text-align: right; }
     #tbody6 td { padding: 6px 10px; }
+    .footnote { font-size: x-small; margin-top: -10px; margin-bottom: 20px; text-align: left; }
   </style>
 </head>
 <body>
+
+
+<table>
+    <thead>
+    <tr>
+      <th colspan="3" class="module-title" style="font-size: 20px;">
+        PLANILHA DE CUSTOS E FORMAÇÃO DE PREÇOS
+      </th>
+    </tr>
+<tr><th colspan="3" class="module-title">MODELO PARA A CONSOLIDAÇÃO E APRESENTAÇÃO DE PROPOSTAS (IN SEGES/ME 05/2017)</th></tr>
+<table border="0" style="width: 100%; margin-top: 10px;">
+  <tbody>
+    <tr>
+      <td style="width: 40%;"><b>Órgão:</b></td>
+      <td><input type="text" style="width: 100%; border: none;"></td>
+    </tr>
+    <tr>
+      <td><b>Nº DO PROCESSO DE REFERÊNCIA:</b></td>
+      <td><input type="text" style="width: 100%; border: none;"></td>
+    </tr>
+    <tr>
+      <td><b>PREGÃO ELETRÔNICO Nº:</b></td>
+      <td><input type="text" style="width: 100%; border: none;"></td>
+    </tr>
+    <tr>
+      <td><b>Data:</b></td>
+      <td><input type="text" style="width: 100%; border: none; "></td>
+    </tr>
+  </tbody>
+</table>
+
+
+  <table>
+    <thead>
+      <tr><th colspan="3" class="module-title">Discriminação dos Serviços (dados referentes à contratação)</th></tr>
+      <tr><th>Item</th><th>Descrição</th><th>Valor</th></tr>
+    </thead>
+    <tbody id="tbody0">
+      <tr><td>A</td><td>Data de apresentação da proposta (dia/mês/ano):</td><td><input type="text" class="text-input" placeholder="dd/mm/yyyy" /></td></tr>
+      <tr><td>B</td><td>Município/UF:</td><td><input type="text" class="text-input" /></td></tr>
+      <tr><td>C</td><td>Ano do Acordo, Convenção ou Dissídio Coletivo:</td><td><input type="text" class="text-input" /></td></tr>
+      <tr><td>D</td><td>Número de meses de execução contratual<sup>1</sup></td><td><input type="text" class="text-input" value="12 (doze) meses" readonly /></td></tr>
+    </tbody>
+  </table>
+  <p class="footnote"><sup>1</sup> Considerando que os acordos são firmados a cada 12 meses pelo sindicato, impactando na proposta.</p>
   <!-- Your existing HTML tables remain unchanged -->
   <table>
     <thead>
