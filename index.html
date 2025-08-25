@@ -114,10 +114,10 @@
   <table>
     <thead>
       <tr><th colspan="3" class="module-title">Discriminação dos Serviços (dados referentes à contratação)</th></tr>
-      <tr><th>Item</th><th>Descrição</th><th>Valor</th></tr>
+      <tr><th>Item</th><th>Descrição</th><th>Informações</th></tr>
     </thead>
     <tbody id="tbody0">
-      <tr><td>A</td><td>Data de apresentação da proposta (dia/mês/ano):</td><td><input type="text" class="text-input" placeholder="dd/mm/yyyy" /></td></tr>
+      <tr><td>A</td><td>Data de apresentação da proposta (dia/mês/ano):</td><td><input type="text" class="text-input" placeholder="Informe a data da proposta" /></td></tr>
       <tr><td>B</td><td>Município/UF:</td><td><input type="text" class="text-input" /></td></tr>
       <tr><td>C</td><td>Ano do Acordo, Convenção ou Dissídio Coletivo:</td><td><input type="text" class="text-input" /></td></tr>
       <tr><td>D</td><td>Número de meses de execução contratual<sup>1</sup></td><td><input type="text" class="text-input" value="12 (doze) meses" readonly /></td></tr>
@@ -144,6 +144,24 @@
     </tbody>
   </table>
 
+  <table>
+    <thead>
+      <tr><th colspan="3" class="module-title">Dados para composição dos custos referentes a mão de obra</th></tr>
+      <tr><th>Item</th><th>Descrição</th><th>Valor</th></tr>
+    </thead>
+    <tbody id="tbodyDados">
+      <tr><td>I</td><td>Tipo de Serviço (mesmo serviço com características distintas)</td><td><input type="text" class="text-input" placeholder="Vigilância Armada, escala de 12x36h diurnas, segunda a domingo" /></td></tr>
+      <tr><td>II</td><td>Classificação Brasileira de Ocupações (CBO)</td><td><input type="text" class="text-input" placeholder="5173-30" /></td></tr>
+      <tr><td>III</td><td>Salário Normativo da Categoria Profissional</td><td><input type="text" class="brl-format" data-value="" /></td></tr>
+      <tr><td>IV</td><td>Categoria Profissional (vinculada a execução contratual)</td><td><input type="text" class="text-input" placeholder="Vigilância" /></td></tr>
+      <tr><td>V</td><td>Data-Base da Categoria (dia/mês/ano)</td><td><input type="text" class="text-input" placeholder="Informe a data da proposta" /></td></tr>
+    </tbody>
+  </table>
+  <div id="footnotes">
+    <p class="footnote">Nota 1: A planilha será calculada considerando o valor mensal do empregado.</p>
+    <p class="footnote">Nota 2: Deverá ser utilizado o salário normativo da Categoria Profissional vigente.</p>
+  </div>
+  <span class="add-link no-print" id="add-note" style="display: block; text-align: center; margin-bottom: 20px;">+ adicionar mais informações/memória de cálculo</span>
 
 
   <table>
@@ -157,10 +175,20 @@
       <tr><td>C</td><td>Adicional de Insalubridade</td><td><input type="text" class="brl-format" data-value="0" /></td></tr>
       <tr><td>D</td><td>Adicional Noturno</td><td><input type="text" class="brl-format" data-value="0" /></td></tr>
       <tr><td>E</td><td>Hora Noturna Reduzida</td><td><input type="text" class="brl-format" data-value="0" /></td></tr>
-      <tr id="add-row-trigger1"><td colspan="3" class="no-print" style="text-align:center;"><span class="add-link" id="add-btn1">+ Adicionar Outro</span></td></tr>
+      <tr id="add-row-trigger1"><td colspan="3" class="no-print" style="text-align:center;"><span class="add-link" id="add-btn1">+ Adicionar Outro Componente de custo</span></td></tr>
       <tr class="total-row"><td colspan="2">Total</td><td><input type="text" id="total1" readonly class="brl-format" data-value="0" /></td></tr>
     </tbody>
   </table>
+  <div id="module1-footnotes">
+    <p class="footnote">Nota 1: O salário base é estabelecido pela Convenção Coletiva de Trabalho (CCT) da categoria.</p>
+    <p class="footnote">Nota 2: Previsto na Súmula 132 TST. Artigo 193 a 197 da CLT. Artigo 7º, inciso XXIII da CF. NR 16 do MTE.</p>
+    <p class="footnote">Nota 3: Estabelecido na CCT da categoria, se houver. Artigo 189 a 192 da CLT (10%, 20% ou 40%). NR 15 do MTE. Súmula nº. 139 do TST.</p>
+    <p class="footnote">Nota 4: Artigo 73 da CLT e artigo 7º, inciso IX da CF. Súmula nº 60 do TST.</p>
+    <p class="footnote">Nota 5: Artigo 73 da CLT. Súmula 437 do TST.</p>
+</div>
+  <span class="add-link no-print" id="add-note-modulo1" style="display: block; text-align: center; margin-bottom: 20px;">+ adicionar mais informações/memória de cálculo</span>
+  
+  
   <table>
     <thead>
       <tr><th colspan="4" class="module-title">Módulo 2 - Encargos e Benefícios Anuais, Mensais e Diários</th></tr>
@@ -425,549 +453,602 @@
     <button id="gen-pdf" class="btn-pdf">Gerar PDF</button>
   </div>
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // Your existing format and parse functions
-      function formatBRL(el, val) {
-        const formatted = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
-        el.setAttribute('data-value', val);
-        if ('value' in el) { el.value = formatted; } else { el.textContent = formatted; }
+document.addEventListener('DOMContentLoaded', () => {
+  // Função auxiliar para configurar adição e remoção de notas
+  function setupFootnotes(addButtonId, footnotesContainerId) {
+    const footnotes = document.getElementById(footnotesContainerId);
+    const addNoteBtn = document.getElementById(addButtonId);
+    
+    if (!footnotes || !addNoteBtn) {
+      console.error(`Elementos não encontrados: ${addButtonId} ou ${footnotesContainerId}`);
+      return;
+    }
+
+    addNoteBtn.addEventListener('click', () => {
+      const noteNum = footnotes.querySelectorAll('.footnote').length + 1;
+      const p = document.createElement('p');
+      p.classList.add('footnote');
+      p.innerHTML = `Nota ${noteNum}: <input type="text" class="text-input" placeholder="Descreva a nota adicional, informe a memória de cálculo utilizada,..."> <span class="remove-link no-print">×</span>`;
+      footnotes.appendChild(p);
+    });
+
+    footnotes.addEventListener('click', e => {
+      if (e.target.classList.contains('remove-link')) {
+        e.target.closest('p').remove();
+        const notes = footnotes.querySelectorAll('.footnote');
+        notes.forEach((note, index) => {
+          const num = index + 1;
+          note.innerHTML = note.innerHTML.replace(/^Nota \d+:/, `Nota ${num}:`);
+        });
       }
-      function formatPct(el, val) {
-        const formatted = val.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%';
-        el.setAttribute('data-value', val);
-        if ('value' in el) { el.value = formatted; } else { el.textContent = formatted; }
-      }
-      function parseNumber(str) { 
-        return parseFloat(str.replace(/[^0-9\-\.,]/g,'').replace(',','.')) || 0; 
-      }
-      // Your existing recalc functions (recalc1, recalc2, recalc3, recalc4, recalc5, recalc41, recalc42, recalc5ins, recalc6, updateSummary)
-      const tbody1 = document.getElementById('tbody1');
-      const total1 = document.getElementById('total1');
-      const addBtn1 = document.getElementById('add-btn1');
-      const recalc1 = () => {
-        let sum = 0;
-        tbody1.querySelectorAll('tr:not(.total-row):not(#add-row-trigger1) .brl-format').forEach(i => {
-          sum += parseNumber(i.getAttribute('data-value'));
-        });
-        formatBRL(total1, sum);
-        const subtotal21 = recalc2(sum);
-        const base22 = sum + subtotal21;
-        recalc3(base22);
-        recalc4();
-        recalc5();
-        recalc5ins();
-        const base4 = sum;
-        recalc41(base4);
-        recalc42();
-        recalc6();
-      };
-      tbody1.querySelectorAll('.brl-format').forEach(i => formatBRL(i, 0));
-      tbody1.addEventListener('focusin', e => {
-        if (e.target.classList.contains('brl-format')) {
-          e.target.value = parseNumber(e.target.getAttribute('data-value')) || '';
-        }
-      });
-      tbody1.addEventListener('focusout', e => {
-        if (e.target.classList.contains('brl-format')) {
-          formatBRL(e.target, parseNumber(e.target.value));
-          recalc1();
-        }
-      });
-      tbody1.addEventListener('click', e => {
-        if (e.target.classList.contains('remove-link')) {
-          e.target.closest('tr').remove();
-          recalc1();
-        }
-      });
-      addBtn1.addEventListener('click', () => {
-        const rows = tbody1.querySelectorAll('tr:not(.total-row):not(#add-row-trigger1)');
-        const last = rows[rows.length - 1].querySelector('td:first-child').textContent.charCodeAt(0);
-        const L = String.fromCharCode(last + 1);
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${L}</td>
-          <td><div style="display:flex;">
-                <input class="text-input" placeholder="Descrição...">
-                <span class="remove-link no-print">×</span>
-              </div></td>
-          <td><input class="brl-format" data-value="0"></td>`;
-        tbody1.insertBefore(tr, document.getElementById('add-row-trigger1'));
-        formatBRL(tr.querySelector('.brl-format'), 0);
-      });
-      const tbody2 = document.getElementById('tbody2');
-      const total2 = document.getElementById('total2');
-      const total2Pct = document.getElementById('total2-pct');
-      [...tbody2.querySelectorAll('tr')].slice(0, 2).forEach(r => {
-        const pctEl = r.querySelector('.percent-format');
-        formatPct(pctEl, parseNumber(pctEl.getAttribute('data-value')));
-      });
-      function recalc2(base) {
-        const v1 = base / 12;
-        const v2 = base / 36;
-        formatBRL(tbody2.rows[0].cells[3].querySelector('.brl-format'), v1);
-        formatBRL(tbody2.rows[1].cells[3].querySelector('.brl-format'), v2);
-        const s = v1 + v2;
-        formatBRL(total2, s);
-        const pctTotal = 8.33 + 2.78;
-        formatPct(total2Pct, pctTotal);
-        return s;
-      }
-      const tbody3 = document.getElementById('tbody3');
-      const total3 = document.getElementById('total3');
-      const totalPct3 = document.getElementById('total-pct3');
-      const rows3 = [...tbody3.querySelectorAll('tr')].slice(0, 8);
-      rows3.forEach(r => formatPct(r.querySelector('.percent-format'), parseNumber(r.querySelector('.percent-format').getAttribute('data-value'))));
-      function recalc3(base) {
-        let sum = 0, p = 0;
-        rows3.forEach(r => {
-          const pct = parseNumber(r.querySelector('.percent-format').getAttribute('data-value'));
-          const val = base * pct / 100;
-          formatBRL(r.querySelector('.brl-format'), val);
-          sum += val;
-          p += pct;
-        });
-        formatPct(totalPct3, p);
-        formatBRL(total3, sum);
-        return sum;
-      }
-      rows3.forEach(r => {
-        const pct = r.querySelector('.percent-format');
-        pct.addEventListener('focusin', () => {
-          pct.value = parseNumber(pct.getAttribute('data-value')) || '';
-        });
-        pct.addEventListener('focusout', () => {
-          let v = parseNumber(pct.value);
-          if (isNaN(v) || pct.value === '') v = parseNumber(pct.getAttribute('data-value')) || 0;
-          formatPct(pct, v);
-          recalc1();
-        });
-      });
-      const tbody4 = document.getElementById('tbody4');
-      const total4 = document.getElementById('total4');
-      const addBtn4 = document.getElementById('add-btn4');
-      const recalc4 = () => {
-        let s = 0;
-        tbody4.querySelectorAll('tr:not(.total-row):not(#add-row-trigger4) .brl-format').forEach(i => s += parseNumber(i.getAttribute('data-value')));
-        formatBRL(total4, s);
-      };
-      tbody4.querySelectorAll('.brl-format').forEach(i => formatBRL(i, 0));
-      tbody4.addEventListener('focusin', e => {
-        if (e.target.classList.contains('brl-format')) {
-          e.target.value = parseNumber(e.target.getAttribute('data-value')) || '';
-        }
-      });
-      tbody4.addEventListener('focusout', e => {
-        if (e.target.classList.contains('brl-format')) {
-          formatBRL(e.target, parseNumber(e.target.value));
-          recalc4();
-        }
-      });
-      tbody4.addEventListener('click', e => {
-        if (e.target.classList.contains('remove-link')) {
-          e.target.closest('tr').remove();
-          recalc4();
-        }
-      });
-      addBtn4.addEventListener('click', () => {
-        const rows = tbody4.querySelectorAll('tr:not(.total-row):not(#add-row-trigger4)');
-        const last = rows[rows.length - 1].querySelector('td:first-child').textContent.charCodeAt(0);
-        const L = String.fromCharCode(last + 1);
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${L}</td>
-          <td><div style="display:flex;">
-                <input class="text-input" placeholder="Descrição...">
-                <span class="remove-link no-print">×</span>
-              </div></td>
-          <td><input class="brl-format" data-value="0"></td>`;
-        tbody4.insertBefore(tr, document.getElementById('add-row-trigger4'));
-        formatBRL(tr.querySelector('.brl-format'), 0);
-      });
-      const tbody5 = document.getElementById('tbody5');
-      const total5 = document.getElementById('total5');
-      const totalPct5 = document.getElementById('total-pct5');
-      const mod1Total = document.getElementById('total1');
-      const calcFromPercent = (pctInput, brlInput) => {
-        const base = parseNumber(mod1Total.getAttribute('data-value'));
-        const pct = parseNumber(pctInput.getAttribute('data-value'));
-        formatBRL(brlInput, base * (pct / 100));
-      };
-      const calcFromValue = (brlInput, pctInput) => {
-        const base = parseNumber(mod1Total.getAttribute('data-value'));
-        const val = parseNumber(brlInput.value);
-        formatPct(pctInput, base ? (val / base) * 100 : 0);
-      };
-      const recalc5 = () => {
-        let sumVal = 0, sumPct = 0;
-        tbody5.querySelectorAll('tr:not(.total-row)').forEach(r => {
-          sumVal += parseNumber(r.querySelector('.brl-format').getAttribute('data-value'));
-          sumPct += parseNumber(r.querySelector('.percent-format').getAttribute('data-value'));
-        });
-        formatBRL(total5, sumVal);
-        formatPct(totalPct5, sumPct);
-      };
-      tbody5.querySelectorAll('tr:not(.total-row)').forEach(r => {
-        const brl = r.querySelector('.brl-format');
-        const pct = r.querySelector('.percent-format');
-        formatBRL(brl, 0);
-        formatPct(pct, 0);
-        pct.addEventListener('focusin', () => pct.value = parseNumber(pct.getAttribute('data-value')) || '');
-        pct.addEventListener('focusout', () => {
-          formatPct(pct, parseNumber(pct.value));
-          calcFromPercent(pct, brl);
-          recalc5();
-        });
-        brl.addEventListener('focusin', () => brl.value = parseNumber(brl.getAttribute('data-value')) || '');
-        brl.addEventListener('focusout', () => {
-          formatBRL(brl, parseNumber(brl.value));
-          calcFromValue(brl, pct);
-          recalc5();
-        });
-      });
-      mod1Total.addEventListener('change', () => {
-        tbody5.querySelectorAll('tr:not(.total-row)').forEach(r => {
-          const pct = r.querySelector('.percent-format');
-          if (parseNumber(pct.getAttribute('data-value')) > 0) {
-            calcFromPercent(pct, r.querySelector('.brl-format'));
-          }
-        });
-        recalc5();
-      });
-      const tbody41 = document.getElementById('tbody41');
-      const totalPct41 = document.getElementById('total-pct41');
-      const total41 = document.getElementById('total41');
-      const addBtn41 = document.getElementById('add-btn41');
-      const propRow = document.getElementById('prop-row');
-      const inc22Row = document.getElementById('inc22-row');
-      function recalc41(base) {
-        const items = {};
-        let pctMat = 0;
-        const ausenciaRows = [...tbody41.querySelectorAll('tr')].filter(row => {
-          const letra = row.cells[0]?.textContent.trim();
-          return letra && /^[A-Z]$/.test(letra) && 
-                 row.id !== 'subtotal-before-prop' && 
-                 row.id !== 'prop-row' && 
-                 row.id !== 'subtotal-before-22' && 
-                 row.id !== 'inc22-row' && 
-                 !row.classList.contains('total-row');
-        });
-        ausenciaRows.forEach(row => {
-          const letra = row.cells[0].textContent.trim();
-          const pctInput = row.querySelector('.percent-format');
-          const brlInput = row.querySelector('.brl-format');
-          const pct = parseNumber(pctInput.getAttribute('data-value'));
-          const valor = base * (pct / 100);
-          formatBRL(brlInput, valor);
-          items[letra] = { pct, valor };
-          if (letra === 'E') pctMat = pct;
-        });
-        const subtotalPct = Object.values(items).reduce((sum, item) => sum + item.pct, 0);
-        const subtotalVal = Object.values(items).reduce((sum, item) => sum + item.valor, 0);
-        const baseProporcional = subtotalPct - pctMat;
-        const pctProp = baseProporcional * (7 / 36);
-        const valProp = base * (pctProp / 100);
-        const subtotalAntes22Pct = subtotalPct + pctProp;
-        const subtotalAntes22Val = subtotalVal + valProp;
-        const pct22 = parseNumber(document.getElementById('total-pct3').getAttribute('data-value'));
-        const valInc22 = subtotalAntes22Val * (pct22 / 100);
-        const totalVal = subtotalAntes22Val + valInc22;
-        const totalPct = (totalVal / base) * 100;
-        formatPct(document.getElementById('pct41_subtotal'), subtotalPct);
-        formatBRL(document.getElementById('subtotal41_before_prop'), subtotalVal);
-        formatPct(document.getElementById('pct41_prop'), pctProp);
-        formatBRL(document.getElementById('val41_prop'), valProp);
-        formatPct(document.getElementById('pct41_subtotal_before22'), subtotalAntes22Pct);
-        formatBRL(document.getElementById('subtotal41_before_22'), subtotalAntes22Val);
-        formatPct(document.getElementById('pct41_inc22'), pct22);
-        formatBRL(document.getElementById('val41_inc22'), valInc22);
-        formatPct(document.getElementById('total-pct41'), totalPct);
-        formatBRL(document.getElementById('total41'), totalVal);
-      }
-      tbody41.addEventListener('click', e => {
-        if (e.target.classList.contains('remove-link')) {
-          e.target.closest('tr').remove();
-          recalc1();
-        }
-      });
-      tbody41.addEventListener('focusout', e => {
-        if (e.target.classList.contains('percent-format') && !e.target.classList.contains('fixed-percent')) {
-          const v = parseNumber(e.target.value);
-          formatPct(e.target, v);
-          recalc1();
-        }
-      });
-      addBtn41.addEventListener('click', () => {
-        const letras = [...tbody41.querySelectorAll('tr')].map(r => r.cells[0].textContent.trim()).filter(t => /^[A-Z]$/.test(t) && t !== 'F' && t !== 'G');
-        let lastCode = letras.length > 0 ? letras[letras.length - 1].charCodeAt(0) : 'E'.charCodeAt(0);
-        let nextCode = lastCode + 1;
-        if (lastCode === 'E'.charCodeAt(0)) { nextCode = 'H'.charCodeAt(0); } else if (nextCode === 'F'.charCodeAt(0) || nextCode === 'G'.charCodeAt(0)) { nextCode = 'H'.charCodeAt(0); }
-        const next = String.fromCharCode(nextCode);
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${next}</td>
-          <td><div style="display:flex;">
+    });
+  }
+
+  // Funções de formatação e parsing
+  function formatBRL(el, val) {
+    const formatted = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
+    el.setAttribute('data-value', val);
+    if ('value' in el) { el.value = formatted; } else { el.textContent = formatted; }
+  }
+  function formatPct(el, val) {
+    const formatted = val.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%';
+    el.setAttribute('data-value', val);
+    if ('value' in el) { el.value = formatted; } else { el.textContent = formatted; }
+  }
+  function parseNumber(str) { 
+    return parseFloat(str.replace(/[^0-9\-\.,]/g,'').replace(',','.')) || 0; 
+  }
+
+  // Funções recalc (mantidas inalteradas)
+  const tbody1 = document.getElementById('tbody1');
+  const total1 = document.getElementById('total1');
+  const addBtn1 = document.getElementById('add-btn1');
+  const recalc1 = () => {
+    let sum = 0;
+    tbody1.querySelectorAll('tr:not(.total-row):not(#add-row-trigger1) .brl-format').forEach(i => {
+      sum += parseNumber(i.getAttribute('data-value'));
+    });
+    formatBRL(total1, sum);
+    const subtotal21 = recalc2(sum);
+    const base22 = sum + subtotal21;
+    recalc3(base22);
+    recalc4();
+    recalc5();
+    recalc5ins();
+    const base4 = sum;
+    recalc41(base4);
+    recalc42();
+    recalc6();
+  };
+  tbody1.querySelectorAll('.brl-format').forEach(i => formatBRL(i, 0));
+  tbody1.addEventListener('focusin', e => {
+    if (e.target.classList.contains('brl-format')) {
+      e.target.value = parseNumber(e.target.getAttribute('data-value')) || '';
+    }
+  });
+  tbody1.addEventListener('focusout', e => {
+    if (e.target.classList.contains('brl-format')) {
+      formatBRL(e.target, parseNumber(e.target.value));
+      recalc1();
+    }
+  });
+  tbody1.addEventListener('click', e => {
+    if (e.target.classList.contains('remove-link')) {
+      e.target.closest('tr').remove();
+      recalc1();
+    }
+  });
+  addBtn1.addEventListener('click', () => {
+    const rows = tbody1.querySelectorAll('tr:not(.total-row):not(#add-row-trigger1)');
+    const last = rows[rows.length - 1].querySelector('td:first-child').textContent.charCodeAt(0);
+    const L = String.fromCharCode(last + 1);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${L}</td>
+      <td><div style="display:flex;">
             <input class="text-input" placeholder="Descrição...">
             <span class="remove-link no-print">×</span>
           </div></td>
-          <td><input class="percent-format" data-value="0"></td>
-          <td><input class="brl-format" data-value="0" readonly></td>`;
-        tbody41.insertBefore(tr, document.getElementById('subtotal-before-prop'));
-        formatPct(tr.querySelector('.percent-format'), 0);
-        formatBRL(tr.querySelector('.brl-format'), 0);
-        recalc1();
-      });
-      const tbody42 = document.getElementById('tbody42');
-      const total42 = document.getElementById('total42');
-      function recalc42() {
-        let s = 0;
-        tbody42.querySelectorAll('tr:not(.total-row) .brl-format').forEach(i => {
-          s += parseNumber(i.getAttribute('data-value'));
-        });
-        formatBRL(total42, s);
-        return s;
-      }
-      tbody42.querySelectorAll('.brl-format').forEach(i => formatBRL(i, 0));
-      tbody42.addEventListener('focusin', e => {
-        if (e.target.classList.contains('brl-format')) {
-          e.target.value = parseNumber(e.target.getAttribute('data-value')) || '';
-        }
-      });
-      tbody42.addEventListener('focusout', e => {
-        if (e.target.classList.contains('brl-format')) {
-          formatBRL(e.target, parseNumber(e.target.value));
-          recalc42();
-          recalc1();
-        }
-      });
-      const tbody5ins = document.getElementById('tbody5ins');
-      const total5ins = document.getElementById('total5ins');
-      const addBtn5ins = document.getElementById('add-btn5ins');
-      function recalc5ins() {
-        let sum = 0;
-        tbody5ins.querySelectorAll('tr:not(.total-row):not(#add-row-trigger5ins) .brl-format').forEach(i => sum += parseNumber(i.getAttribute('data-value')));
-        formatBRL(total5ins, sum);
-      }
-      tbody5ins.querySelectorAll('.brl-format').forEach(i => formatBRL(i, 0));
-      tbody5ins.addEventListener('click', e => {
-        if (e.target.classList.contains('remove-link')) {
-          e.target.closest('tr').remove();
-          recalc5ins();
-          recalc1();
-        }
-      });
-      tbody5ins.addEventListener('focusout', e => {
-        if (e.target.classList.contains('brl-format')) {
-          formatBRL(e.target, parseNumber(e.target.value));
-          recalc5ins();
-          recalc1();
-        }
-      });
-      addBtn5ins.addEventListener('click', () => {
-        const rows = tbody5ins.querySelectorAll('tr:not(.total-row):not(#add-row-trigger5ins)');
-        const last = rows[rows.length - 1].querySelector('td:first-child').textContent.charCodeAt(0);
-        const L = String.fromCharCode(last + 1);
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${L}</td>
-          <td><div style="display:flex;">
-                <input class="text-input" placeholder="Descrição...">
-                <span class="remove-link no-print">×</span>
-              </div></td>
-          <td><input class="brl-format" data-value="0"></td>`;
-        tbody5ins.insertBefore(tr, document.getElementById('add-row-trigger5ins'));
-        formatBRL(tr.querySelector('.brl-format'), 0);
-      });
-      const tbody6 = document.getElementById('tbody6');
-      const rowCI = tbody6.querySelector('tr[data-item="A"]');
-      const rowL = tbody6.querySelector('tr[data-item="B"]');
-      const trib = [...tbody6.querySelectorAll('tr')].filter(r => ['ISS','COFINS','PIS'].includes(r.dataset.item));
-      const pctCI = rowCI.querySelector('.percent-format');
-      const brlCI = rowCI.querySelector('.brl-format');
-      const pctL = rowL.querySelector('.percent-format');
-      const brlL = rowL.querySelector('.brl-format');
-      [pctCI, pctL].forEach(inp => {
-        const rawPct = parseNumber(inp.getAttribute('data-value'));
-        formatPct(inp, rawPct);
-      });
-      [brlCI, brlL].forEach(inp => {
-        const rawVal = parseNumber(inp.getAttribute('data-value'));
-        formatBRL(inp, rawVal);
-      });
-      ['ISS','COFINS','PIS'].forEach(item => {
-        const pctEl = tbody6.querySelector(`tr[data-item="${item}"] .percent-format`);
-        const raw = parseNumber(pctEl.getAttribute('data-value'));
-        formatPct(pctEl, raw);
-        const brlEl = tbody6.querySelector(`tr[data-item="${item}"] .brl-format`);
-        formatBRL(brlEl, 0);
-      });
-      function recalc6() {
-        const t1 = parseNumber(document.getElementById('total1').getAttribute('data-value'));
-        const t21 = parseNumber(document.getElementById('total2').getAttribute('data-value'));
-        const t22 = parseNumber(document.getElementById('total3').getAttribute('data-value'));
-        const t23 = parseNumber(document.getElementById('total4').getAttribute('data-value'));
-        const t3 = parseNumber(document.getElementById('total5').getAttribute('data-value'));
-        const t41 = parseNumber(document.getElementById('total41').getAttribute('data-value'));
-        const t42 = parseNumber(document.getElementById('total42').getAttribute('data-value'));
-        const t5 = parseNumber(document.getElementById('total5ins').getAttribute('data-value'));
-        const baseCI = t1 + t21 + t22 + t23 + t3 + t41 + t42 + t5;
-        const pctCIv = parseNumber(pctCI.getAttribute('data-value'));
-        const valCI = pctCIv > 0 ? baseCI * pctCIv / 100 : parseNumber(brlCI.getAttribute('data-value'));
-        formatBRL(brlCI, valCI);
-        formatPct(pctCI, baseCI > 0 ? (valCI / baseCI) * 100 : 0);
-        const baseL = baseCI + valCI;
-        const pctLv = parseNumber(pctL.getAttribute('data-value'));
-        const valL = pctLv > 0 ? baseL * pctLv / 100 : parseNumber(brlL.getAttribute('data-value'));
-        formatBRL(brlL, valL);
-        formatPct(pctL, baseL > 0 ? (valL / baseL) * 100 : 0);
-        const soma = baseL + valL;
-        const tribInputs = [...tbody6.querySelectorAll('tr')].filter(r => ['ISS','COFINS','PIS'].includes(r.dataset.item)).map(r => {
-          const pctInput = r.querySelector('.percent-format');
-          const brlInput = r.querySelector('.brl-format');
-          const pct = parseNumber(pctInput.getAttribute('data-value'));
-          return { pctInput, brlInput, pct };
-        });
-        const somaPctTrib = tribInputs.reduce((sum, t) => sum + t.pct, 0);
-        tribInputs.forEach(({ pctInput, brlInput, pct }) => {
-          const aliquota = pct / 100;
-          const denominador = 1 - somaPctTrib / 100;
-          const valor = aliquota > 0 ? (soma * aliquota) / denominador : 0;
-          formatBRL(brlInput, valor);
-        });
-        const pctFields6 = [pctCI, pctL, ...tribInputs.map(t => t.pctInput)];
-        const totalPct6 = pctFields6.map(el => parseNumber(el.getAttribute('data-value'))).reduce((a, b) => a + b, 0);
-        formatPct(document.getElementById('total-pct6'), totalPct6);
-        const valFields6 = [brlCI, brlL, ...tribInputs.map(t => t.brlInput)];
-        const totalVal6 = valFields6.map(el => parseNumber(el.getAttribute('data-value'))).reduce((a, b) => a + b, 0);
-        formatBRL(document.getElementById('total6'), totalVal6);
-        const ci = parseNumber(brlCI.getAttribute('data-value'));
-        const lucro = parseNumber(brlL.getAttribute('data-value'));
-        const tributos = tribInputs.map(t => parseNumber(t.brlInput.getAttribute('data-value'))).reduce((a, b) => a + b, 0);
-        const total6 = ci + lucro + tributos;
-        formatBRL(document.getElementById('sum6'), total6);
-        updateSummary();
-      }
-      function updateSummary() {
-        const v1 = parseNumber(document.getElementById('total1').getAttribute('data-value'));
-        const v21 = parseNumber(document.getElementById('total2').getAttribute('data-value'));
-        const v22 = parseNumber(document.getElementById('total3').getAttribute('data-value'));
-        const v23 = parseNumber(document.getElementById('total4').getAttribute('data-value'));
-        const v2 = v21 + v22 + v23;
-        const v3 = parseNumber(document.getElementById('total5').getAttribute('data-value'));
-        const v4 = parseNumber(document.getElementById('total41').getAttribute('data-value')) + parseNumber(document.getElementById('total42').getAttribute('data-value'));
-        const v5 = parseNumber(document.getElementById('total5ins').getAttribute('data-value'));
-        const v6 = parseNumber(document.getElementById('sum6').getAttribute('data-value'));
-        formatBRL(document.getElementById('sum1'), v1);
-        formatBRL(document.getElementById('sum2'), v2);
-        formatBRL(document.getElementById('sum3'), v3);
-        formatBRL(document.getElementById('sum4'), v4);
-        formatBRL(document.getElementById('sum5'), v5);
-        const subtotal = v1 + v2 + v3 + v4 + v5;
-        const totalEmp = subtotal + v6;
-        formatBRL(document.getElementById('subtotal'), subtotal);
-        formatBRL(document.getElementById('totalEmployee'), totalEmp);
-        const nEmp = parseInt(document.getElementById('numEmployees').value) || 1;
-        const monthlyTotal = totalEmp * nEmp;
-        formatBRL(document.getElementById('monthlyTotal'), monthlyTotal);
-        const months = parseInt(document.getElementById('contractMonths').value) || 12;
-        formatBRL(document.getElementById('contractTotal'), monthlyTotal * months);
-      }
-      document.getElementById('numEmployees').addEventListener('input', updateSummary);
-      document.getElementById('contractMonths').addEventListener('input', updateSummary);
-      const pctFields6 = document.querySelectorAll('#tbody6 .percent-format');
-      const brlFields6 = document.querySelectorAll('#tbody6 tr[data-item="A"] .brl-format, #tbody6 tr[data-item="B"] .brl-format');
-      [...pctFields6, ...brlFields6].forEach(inp => {
-        inp.addEventListener('focusin', () => {
-          inp.value = parseNumber(inp.getAttribute('data-value')) || '';
-        });
-        inp.addEventListener('focusout', () => {
-          if (inp.classList.contains('percent-format')) {
-            formatPct(inp, parseNumber(inp.value));
-          } else {
-            formatBRL(inp, parseNumber(inp.value));
-          }
-          recalc6();
-        });
-      });
-     // Função auxiliar modificada: inclui todos os itens, inclusive zeros
-      function collectItems(tbodyId) {
-        const items = {};
-        const tbody = document.getElementById(tbodyId);
-        tbody.querySelectorAll('tr:not(.total-row):not([id^="add-row-trigger"]):not(.subtotal-row)').forEach(tr => {
-          const descEl = tr.cells[1].querySelector('.text-input') || tr.cells[1];
-          const desc = descEl.value || descEl.textContent.trim();
-          const brlEl = tr.querySelector('.brl-format');
-          const value = brlEl ? parseNumber(brlEl.getAttribute('data-value')) : 0;
-          if (desc) {
-            items[desc] = value;  // Inclui todos, inclusive zeros
-          }
-        });
-        return items;
-      }
-      // Função sendToGoogleSheets permanece a mesma, mas agora recebe itens com zeros
-      async function sendToGoogleSheets() {
-        const data = {
-          module1: collectItems('tbody1'),
-          module2_1: collectItems('tbody2'),
-          module2_2: collectItems('tbody3'),
-          module2_3: collectItems('tbody4'),
-          module3: collectItems('tbody5'),
-          module4_1: collectItems('tbody41'),
-          module4_2: collectItems('tbody42'),
-          module5: collectItems('tbody5ins'),
-          module6: collectItems('tbody6'),
-          total1: parseNumber(document.getElementById('total1').getAttribute('data-value')),
-          total2_1: parseNumber(document.getElementById('total2').getAttribute('data-value')),
-          total2_2: parseNumber(document.getElementById('total3').getAttribute('data-value')),
-          total2_3: parseNumber(document.getElementById('total4').getAttribute('data-value')),
-          total3: parseNumber(document.getElementById('total5').getAttribute('data-value')),
-          total4_1: parseNumber(document.getElementById('total41').getAttribute('data-value')),
-          total4_2: parseNumber(document.getElementById('total42').getAttribute('data-value')),
-          total5: parseNumber(document.getElementById('total5ins').getAttribute('data-value')),
-          total6: parseNumber(document.getElementById('total6').getAttribute('data-value')),
-          subtotal: parseNumber(document.getElementById('subtotal').getAttribute('data-value')),
-          totalEmployee: parseNumber(document.getElementById('totalEmployee').getAttribute('data-value')),
-          numEmployees: parseInt(document.getElementById('numEmployees').value) || 1,
-          monthlyTotal: parseNumber(document.getElementById('monthlyTotal').getAttribute('data-value')),
-          contractMonths: parseInt(document.getElementById('contractMonths').value) || 12,
-          contractTotal: parseNumber(document.getElementById('contractTotal').getAttribute('data-value'))
-        };
-        try {
-          const response = await fetch('https://script.google.com/macros/s/AKfycby_gmUOvOpBzENGbUTZ56soDPBgMN8Y5k_MRc9klyU42ARWVAki2NqiPddhqUsgvZ4y/exec', {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain' },
-            body: JSON.stringify(data)
-          });
-          const result = await response.json();
-          if (result.status !== 'success') {
-            console.error('Erro ao enviar para Google Sheets:', result);
-          }
-        } catch (error) {
-          console.error('Falha na integração:', error);
-        }
-      }
-
-      document.getElementById('gen-pdf').addEventListener('click', async () => {
-        await sendToGoogleSheets();
-        const inputsToReplace = [];
-        const replaceInputs = selector => {
-          document.querySelectorAll(selector).forEach(input => {
-            const span = document.createElement('span');
-            span.textContent = input.value || input.placeholder || '';
-            span.style.whiteSpace = 'nowrap';
-            input.style.display = 'none';
-            input.parentNode.insertBefore(span, input.nextSibling);
-            inputsToReplace.push({ input, span });
-          });
-        };
-        replaceInputs('input.brl-format');
-        replaceInputs('input.percent-format');
-        replaceInputs('input.text-input');
-        window.print();
-        inputsToReplace.forEach(({ input, span }) => {
-          span.remove();
-          input.style.display = '';
-        });
-      });
+      <td><input class="brl-format" data-value="0"></td>`;
+    tbody1.insertBefore(tr, document.getElementById('add-row-trigger1'));
+    formatBRL(tr.querySelector('.brl-format'), 0);
+  });
+  const tbody2 = document.getElementById('tbody2');
+  const total2 = document.getElementById('total2');
+  const total2Pct = document.getElementById('total2-pct');
+  [...tbody2.querySelectorAll('tr')].slice(0, 2).forEach(r => {
+    const pctEl = r.querySelector('.percent-format');
+    formatPct(pctEl, parseNumber(pctEl.getAttribute('data-value')));
+  });
+  function recalc2(base) {
+    const v1 = base / 12;
+    const v2 = base / 36;
+    formatBRL(tbody2.rows[0].cells[3].querySelector('.brl-format'), v1);
+    formatBRL(tbody2.rows[1].cells[3].querySelector('.brl-format'), v2);
+    const s = v1 + v2;
+    formatBRL(total2, s);
+    const pctTotal = 8.33 + 2.78;
+    formatPct(total2Pct, pctTotal);
+    return s;
+  }
+  const tbody3 = document.getElementById('tbody3');
+  const total3 = document.getElementById('total3');
+  const totalPct3 = document.getElementById('total-pct3');
+  const rows3 = [...tbody3.querySelectorAll('tr')].slice(0, 8);
+  rows3.forEach(r => formatPct(r.querySelector('.percent-format'), parseNumber(r.querySelector('.percent-format').getAttribute('data-value'))));
+  function recalc3(base) {
+    let sum = 0, p = 0;
+    rows3.forEach(r => {
+      const pct = parseNumber(r.querySelector('.percent-format').getAttribute('data-value'));
+      const val = base * pct / 100;
+      formatBRL(r.querySelector('.brl-format'), val);
+      sum += val;
+      p += pct;
+    });
+    formatPct(totalPct3, p);
+    formatBRL(total3, sum);
+    return sum;
+  }
+  rows3.forEach(r => {
+    const pct = r.querySelector('.percent-format');
+    pct.addEventListener('focusin', () => {
+      pct.value = parseNumber(pct.getAttribute('data-value')) || '';
+    });
+    pct.addEventListener('focusout', () => {
+      let v = parseNumber(pct.value);
+      if (isNaN(v) || pct.value === '') v = parseNumber(pct.getAttribute('data-value')) || 0;
+      formatPct(pct, v);
       recalc1();
     });
+  });
+  const tbody4 = document.getElementById('tbody4');
+  const total4 = document.getElementById('total4');
+  const addBtn4 = document.getElementById('add-btn4');
+  const recalc4 = () => {
+    let s = 0;
+    tbody4.querySelectorAll('tr:not(.total-row):not(#add-row-trigger4) .brl-format').forEach(i => s += parseNumber(i.getAttribute('data-value')));
+    formatBRL(total4, s);
+  };
+  tbody4.querySelectorAll('.brl-format').forEach(i => formatBRL(i, 0));
+  tbody4.addEventListener('focusin', e => {
+    if (e.target.classList.contains('brl-format')) {
+      e.target.value = parseNumber(e.target.getAttribute('data-value')) || '';
+    }
+  });
+  tbody4.addEventListener('focusout', e => {
+    if (e.target.classList.contains('brl-format')) {
+      formatBRL(e.target, parseNumber(e.target.value));
+      recalc4();
+    }
+  });
+  tbody4.addEventListener('click', e => {
+    if (e.target.classList.contains('remove-link')) {
+      e.target.closest('tr').remove();
+      recalc4();
+    }
+  });
+  addBtn4.addEventListener('click', () => {
+    const rows = tbody4.querySelectorAll('tr:not(.total-row):not(#add-row-trigger4)');
+    const last = rows[rows.length - 1].querySelector('td:first-child').textContent.charCodeAt(0);
+    const L = String.fromCharCode(last + 1);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${L}</td>
+      <td><div style="display:flex;">
+            <input class="text-input" placeholder="Descrição...">
+            <span class="remove-link no-print">×</span>
+          </div></td>
+      <td><input class="brl-format" data-value="0"></td>`;
+    tbody4.insertBefore(tr, document.getElementById('add-row-trigger4'));
+    formatBRL(tr.querySelector('.brl-format'), 0);
+  });
+  const tbody5 = document.getElementById('tbody5');
+  const total5 = document.getElementById('total5');
+  const totalPct5 = document.getElementById('total-pct5');
+  const mod1Total = document.getElementById('total1');
+  const calcFromPercent = (pctInput, brlInput) => {
+    const base = parseNumber(mod1Total.getAttribute('data-value'));
+    const pct = parseNumber(pctInput.getAttribute('data-value'));
+    formatBRL(brlInput, base * (pct / 100));
+  };
+  const calcFromValue = (brlInput, pctInput) => {
+    const base = parseNumber(mod1Total.getAttribute('data-value'));
+    const val = parseNumber(brlInput.value);
+    formatPct(pctInput, base ? (val / base) * 100 : 0);
+  };
+  const recalc5 = () => {
+    let sumVal = 0, sumPct = 0;
+    tbody5.querySelectorAll('tr:not(.total-row)').forEach(r => {
+      sumVal += parseNumber(r.querySelector('.brl-format').getAttribute('data-value'));
+      sumPct += parseNumber(r.querySelector('.percent-format').getAttribute('data-value'));
+    });
+    formatBRL(total5, sumVal);
+    formatPct(totalPct5, sumPct);
+  };
+  tbody5.querySelectorAll('tr:not(.total-row)').forEach(r => {
+    const brl = r.querySelector('.brl-format');
+    const pct = r.querySelector('.percent-format');
+    formatBRL(brl, 0);
+    formatPct(pct, 0);
+    pct.addEventListener('focusin', () => pct.value = parseNumber(pct.getAttribute('data-value')) || '');
+    pct.addEventListener('focusout', () => {
+      formatPct(pct, parseNumber(pct.value));
+      calcFromPercent(pct, brl);
+      recalc5();
+    });
+    brl.addEventListener('focusin', () => brl.value = parseNumber(brl.getAttribute('data-value')) || '');
+    brl.addEventListener('focusout', () => {
+      formatBRL(brl, parseNumber(brl.value));
+      calcFromValue(brl, pct);
+      recalc5();
+    });
+  });
+  mod1Total.addEventListener('change', () => {
+    tbody5.querySelectorAll('tr:not(.total-row)').forEach(r => {
+      const pct = r.querySelector('.percent-format');
+      if (parseNumber(pct.getAttribute('data-value')) > 0) {
+        calcFromPercent(pct, r.querySelector('.brl-format'));
+      }
+    });
+    recalc5();
+  });
+  const tbody41 = document.getElementById('tbody41');
+  const totalPct41 = document.getElementById('total-pct41');
+  const total41 = document.getElementById('total41');
+  const addBtn41 = document.getElementById('add-btn41');
+  const propRow = document.getElementById('prop-row');
+  const inc22Row = document.getElementById('inc22-row');
+  function recalc41(base) {
+    const items = {};
+    let pctMat = 0;
+    const ausenciaRows = [...tbody41.querySelectorAll('tr')].filter(row => {
+      const letra = row.cells[0]?.textContent.trim();
+      return letra && /^[A-Z]$/.test(letra) && 
+             row.id !== 'subtotal-before-prop' && 
+             row.id !== 'prop-row' && 
+             row.id !== 'subtotal-before-22' && 
+             row.id !== 'inc22-row' && 
+             !row.classList.contains('total-row');
+    });
+    ausenciaRows.forEach(row => {
+      const letra = row.cells[0].textContent.trim();
+      const pctInput = row.querySelector('.percent-format');
+      const brlInput = row.querySelector('.brl-format');
+      const pct = parseNumber(pctInput.getAttribute('data-value'));
+      const valor = base * (pct / 100);
+      formatBRL(brlInput, valor);
+      items[letra] = { pct, valor };
+      if (letra === 'E') pctMat = pct;
+    });
+    const subtotalPct = Object.values(items).reduce((sum, item) => sum + item.pct, 0);
+    const subtotalVal = Object.values(items).reduce((sum, item) => sum + item.valor, 0);
+    const baseProporcional = subtotalPct - pctMat;
+    const pctProp = baseProporcional * (7 / 36);
+    const valProp = base * (pctProp / 100);
+    const subtotalAntes22Pct = subtotalPct + pctProp;
+    const subtotalAntes22Val = subtotalVal + valProp;
+    const pct22 = parseNumber(document.getElementById('total-pct3').getAttribute('data-value'));
+    const valInc22 = subtotalAntes22Val * (pct22 / 100);
+    const totalVal = subtotalAntes22Val + valInc22;
+    const totalPct = (totalVal / base) * 100;
+    formatPct(document.getElementById('pct41_subtotal'), subtotalPct);
+    formatBRL(document.getElementById('subtotal41_before_prop'), subtotalVal);
+    formatPct(document.getElementById('pct41_prop'), pctProp);
+    formatBRL(document.getElementById('val41_prop'), valProp);
+    formatPct(document.getElementById('pct41_subtotal_before22'), subtotalAntes22Pct);
+    formatBRL(document.getElementById('subtotal41_before_22'), subtotalAntes22Val);
+    formatPct(document.getElementById('pct41_inc22'), pct22);
+    formatBRL(document.getElementById('val41_inc22'), valInc22);
+    formatPct(document.getElementById('total-pct41'), totalPct);
+    formatBRL(document.getElementById('total41'), totalVal);
+  }
+  tbody41.addEventListener('click', e => {
+    if (e.target.classList.contains('remove-link')) {
+      e.target.closest('tr').remove();
+      recalc1();
+    }
+  });
+  tbody41.addEventListener('focusout', e => {
+    if (e.target.classList.contains('percent-format') && !e.target.classList.contains('fixed-percent')) {
+      const v = parseNumber(e.target.value);
+      formatPct(e.target, v);
+      recalc1();
+    }
+  });
+  addBtn41.addEventListener('click', () => {
+    const letras = [...tbody41.querySelectorAll('tr')].map(r => r.cells[0].textContent.trim()).filter(t => /^[A-Z]$/.test(t) && t !== 'F' && t !== 'G');
+    let lastCode = letras.length > 0 ? letras[letras.length - 1].charCodeAt(0) : 'E'.charCodeAt(0);
+    let nextCode = lastCode + 1;
+    if (lastCode === 'E'.charCodeAt(0)) { nextCode = 'H'.charCodeAt(0); } else if (nextCode === 'F'.charCodeAt(0) || nextCode === 'G'.charCodeAt(0)) { nextCode = 'H'.charCodeAt(0); }
+    const next = String.fromCharCode(nextCode);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${next}</td>
+      <td><div style="display:flex;">
+        <input class="text-input" placeholder="Descrição...">
+        <span class="remove-link no-print">×</span>
+      </div></td>
+      <td><input class="percent-format" data-value="0"></td>
+      <td><input class="brl-format" data-value="0" readonly></td>`;
+    tbody41.insertBefore(tr, document.getElementById('subtotal-before-prop'));
+    formatPct(tr.querySelector('.percent-format'), 0);
+    formatBRL(tr.querySelector('.brl-format'), 0);
+    recalc1();
+  });
+  const tbody42 = document.getElementById('tbody42');
+  const total42 = document.getElementById('total42');
+  function recalc42() {
+    let s = 0;
+    tbody42.querySelectorAll('tr:not(.total-row) .brl-format').forEach(i => {
+      s += parseNumber(i.getAttribute('data-value'));
+    });
+    formatBRL(total42, s);
+    return s;
+  }
+  tbody42.querySelectorAll('.brl-format').forEach(i => formatBRL(i, 0));
+  tbody42.addEventListener('focusin', e => {
+    if (e.target.classList.contains('brl-format')) {
+      e.target.value = parseNumber(e.target.getAttribute('data-value')) || '';
+    }
+  });
+  tbody42.addEventListener('focusout', e => {
+    if (e.target.classList.contains('brl-format')) {
+      formatBRL(e.target, parseNumber(e.target.value));
+      recalc42();
+      recalc1();
+    }
+  });
+  const tbody5ins = document.getElementById('tbody5ins');
+  const total5ins = document.getElementById('total5ins');
+  const addBtn5ins = document.getElementById('add-btn5ins');
+  function recalc5ins() {
+    let sum = 0;
+    tbody5ins.querySelectorAll('tr:not(.total-row):not(#add-row-trigger5ins) .brl-format').forEach(i => sum += parseNumber(i.getAttribute('data-value')));
+    formatBRL(total5ins, sum);
+  }
+  tbody5ins.querySelectorAll('.brl-format').forEach(i => formatBRL(i, 0));
+  tbody5ins.addEventListener('click', e => {
+    if (e.target.classList.contains('remove-link')) {
+      e.target.closest('tr').remove();
+      recalc5ins();
+      recalc1();
+    }
+  });
+  tbody5ins.addEventListener('focusout', e => {
+    if (e.target.classList.contains('brl-format')) {
+      formatBRL(e.target, parseNumber(e.target.value));
+      recalc5ins();
+      recalc1();
+    }
+  });
+  addBtn5ins.addEventListener('click', () => {
+    const rows = tbody5ins.querySelectorAll('tr:not(.total-row):not(#add-row-trigger5ins)');
+    const last = rows[rows.length - 1].querySelector('td:first-child').textContent.charCodeAt(0);
+    const L = String.fromCharCode(last + 1);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${L}</td>
+      <td><div style="display:flex;">
+            <input class="text-input" placeholder="Descrição...">
+            <span class="remove-link no-print">×</span>
+          </div></td>
+      <td><input class="brl-format" data-value="0"></td>`;
+    tbody5ins.insertBefore(tr, document.getElementById('add-row-trigger5ins'));
+    formatBRL(tr.querySelector('.brl-format'), 0);
+  });
+  const tbody6 = document.getElementById('tbody6');
+  const rowCI = tbody6.querySelector('tr[data-item="A"]');
+  const rowL = tbody6.querySelector('tr[data-item="B"]');
+  const trib = [...tbody6.querySelectorAll('tr')].filter(r => ['ISS','COFINS','PIS'].includes(r.dataset.item));
+  const pctCI = rowCI.querySelector('.percent-format');
+  const brlCI = rowCI.querySelector('.brl-format');
+  const pctL = rowL.querySelector('.percent-format');
+  const brlL = rowL.querySelector('.brl-format');
+  [pctCI, pctL].forEach(inp => {
+    const rawPct = parseNumber(inp.getAttribute('data-value'));
+    formatPct(inp, rawPct);
+  });
+  [brlCI, brlL].forEach(inp => {
+    const rawVal = parseNumber(inp.getAttribute('data-value'));
+    formatBRL(inp, rawVal);
+  });
+  ['ISS','COFINS','PIS'].forEach(item => {
+    const pctEl = tbody6.querySelector(`tr[data-item="${item}"] .percent-format`);
+    const raw = parseNumber(pctEl.getAttribute('data-value'));
+    formatPct(pctEl, raw);
+    const brlEl = tbody6.querySelector(`tr[data-item="${item}"] .brl-format`);
+    formatBRL(brlEl, 0);
+  });
+  function recalc6() {
+    const t1 = parseNumber(document.getElementById('total1').getAttribute('data-value'));
+    const t21 = parseNumber(document.getElementById('total2').getAttribute('data-value'));
+    const t22 = parseNumber(document.getElementById('total3').getAttribute('data-value'));
+    const t23 = parseNumber(document.getElementById('total4').getAttribute('data-value'));
+    const t3 = parseNumber(document.getElementById('total5').getAttribute('data-value'));
+    const t41 = parseNumber(document.getElementById('total41').getAttribute('data-value'));
+    const t42 = parseNumber(document.getElementById('total42').getAttribute('data-value'));
+    const t5 = parseNumber(document.getElementById('total5ins').getAttribute('data-value'));
+    const baseCI = t1 + t21 + t22 + t23 + t3 + t41 + t42 + t5;
+    const pctCIv = parseNumber(pctCI.getAttribute('data-value'));
+    const valCI = pctCIv > 0 ? baseCI * pctCIv / 100 : parseNumber(brlCI.getAttribute('data-value'));
+    formatBRL(brlCI, valCI);
+    formatPct(pctCI, baseCI > 0 ? (valCI / baseCI) * 100 : 0);
+    const baseL = baseCI + valCI;
+    const pctLv = parseNumber(pctL.getAttribute('data-value'));
+    const valL = pctLv > 0 ? baseL * pctLv / 100 : parseNumber(brlL.getAttribute('data-value'));
+    formatBRL(brlL, valL);
+    formatPct(pctL, baseL > 0 ? (valL / baseL) * 100 : 0);
+    const soma = baseL + valL;
+    const tribInputs = [...tbody6.querySelectorAll('tr')].filter(r => ['ISS','COFINS','PIS'].includes(r.dataset.item)).map(r => {
+      const pctInput = r.querySelector('.percent-format');
+      const brlInput = r.querySelector('.brl-format');
+      const pct = parseNumber(pctInput.getAttribute('data-value'));
+      return { pctInput, brlInput, pct };
+    });
+    const somaPctTrib = tribInputs.reduce((sum, t) => sum + t.pct, 0);
+    tribInputs.forEach(({ pctInput, brlInput, pct }) => {
+      const aliquota = pct / 100;
+      const denominador = 1 - somaPctTrib / 100;
+      const valor = aliquota > 0 ? (soma * aliquota) / denominador : 0;
+      formatBRL(brlInput, valor);
+    });
+    const pctFields6 = [pctCI, pctL, ...tribInputs.map(t => t.pctInput)];
+    const totalPct6 = pctFields6.map(el => parseNumber(el.getAttribute('data-value'))).reduce((a, b) => a + b, 0);
+    formatPct(document.getElementById('total-pct6'), totalPct6);
+    const valFields6 = [brlCI, brlL, ...tribInputs.map(t => t.brlInput)];
+    const totalVal6 = valFields6.map(el => parseNumber(el.getAttribute('data-value'))).reduce((a, b) => a + b, 0);
+    formatBRL(document.getElementById('total6'), totalVal6);
+    const ci = parseNumber(brlCI.getAttribute('data-value'));
+    const lucro = parseNumber(brlL.getAttribute('data-value'));
+    const tributos = tribInputs.map(t => parseNumber(t.brlInput.getAttribute('data-value'))).reduce((a, b) => a + b, 0);
+    const total6 = ci + lucro + tributos;
+    formatBRL(document.getElementById('sum6'), total6);
+    updateSummary();
+  }
+  function updateSummary() {
+    const v1 = parseNumber(document.getElementById('total1').getAttribute('data-value'));
+    const v21 = parseNumber(document.getElementById('total2').getAttribute('data-value'));
+    const v22 = parseNumber(document.getElementById('total3').getAttribute('data-value'));
+    const v23 = parseNumber(document.getElementById('total4').getAttribute('data-value'));
+    const v2 = v21 + v22 + v23;
+    const v3 = parseNumber(document.getElementById('total5').getAttribute('data-value'));
+    const v4 = parseNumber(document.getElementById('total41').getAttribute('data-value')) + parseNumber(document.getElementById('total42').getAttribute('data-value'));
+    const v5 = parseNumber(document.getElementById('total5ins').getAttribute('data-value'));
+    const v6 = parseNumber(document.getElementById('sum6').getAttribute('data-value'));
+    formatBRL(document.getElementById('sum1'), v1);
+    formatBRL(document.getElementById('sum2'), v2);
+    formatBRL(document.getElementById('sum3'), v3);
+    formatBRL(document.getElementById('sum4'), v4);
+    formatBRL(document.getElementById('sum5'), v5);
+    const subtotal = v1 + v2 + v3 + v4 + v5;
+    const totalEmp = subtotal + v6;
+    formatBRL(document.getElementById('subtotal'), subtotal);
+    formatBRL(document.getElementById('totalEmployee'), totalEmp);
+    const nEmp = parseInt(document.getElementById('numEmployees').value) || 1;
+    const monthlyTotal = totalEmp * nEmp;
+    formatBRL(document.getElementById('monthlyTotal'), monthlyTotal);
+    const months = parseInt(document.getElementById('contractMonths').value) || 12;
+    formatBRL(document.getElementById('contractTotal'), monthlyTotal * months);
+  }
+  document.getElementById('numEmployees').addEventListener('input', updateSummary);
+  document.getElementById('contractMonths').addEventListener('input', updateSummary);
+  const pctFields6 = document.querySelectorAll('#tbody6 .percent-format');
+  const brlFields6 = document.querySelectorAll('#tbody6 tr[data-item="A"] .brl-format, #tbody6 tr[data-item="B"] .brl-format');
+  [...pctFields6, ...brlFields6].forEach(inp => {
+    inp.addEventListener('focusin', () => {
+      inp.value = parseNumber(inp.getAttribute('data-value')) || '';
+    });
+    inp.addEventListener('focusout', () => {
+      if (inp.classList.contains('percent-format')) {
+        formatPct(inp, parseNumber(inp.value));
+      } else {
+        formatBRL(inp, parseNumber(inp.value));
+      }
+      recalc6();
+    });
+  });
+  function collectItems(tbodyId) {
+    const items = {};
+    const tbody = document.getElementById(tbodyId);
+    tbody.querySelectorAll('tr:not(.total-row):not([id^="add-row-trigger"]):not(.subtotal-row)').forEach(tr => {
+      const descEl = tr.cells[1].querySelector('.text-input') || tr.cells[1];
+      const desc = descEl.value || descEl.textContent.trim();
+      const brlEl = tr.querySelector('.brl-format');
+      const value = brlEl ? parseNumber(brlEl.getAttribute('data-value')) : 0;
+      if (desc) {
+        items[desc] = value;
+      }
+    });
+    return items;
+  }
+  async function sendToGoogleSheets() {
+    const data = {
+      module1: collectItems('tbody1'),
+      module2_1: collectItems('tbody2'),
+      module2_2: collectItems('tbody3'),
+      module2_3: collectItems('tbody4'),
+      module3: collectItems('tbody5'),
+      module4_1: collectItems('tbody41'),
+      module4_2: collectItems('tbody42'),
+      module5: collectItems('tbody5ins'),
+      module6: collectItems('tbody6'),
+      total1: parseNumber(document.getElementById('total1').getAttribute('data-value')),
+      total2_1: parseNumber(document.getElementById('total2').getAttribute('data-value')),
+      total2_2: parseNumber(document.getElementById('total3').getAttribute('data-value')),
+      total2_3: parseNumber(document.getElementById('total4').getAttribute('data-value')),
+      total3: parseNumber(document.getElementById('total5').getAttribute('data-value')),
+      total4_1: parseNumber(document.getElementById('total41').getAttribute('data-value')),
+      total4_2: parseNumber(document.getElementById('total42').getAttribute('data-value')),
+      total5: parseNumber(document.getElementById('total5ins').getAttribute('data-value')),
+      total6: parseNumber(document.getElementById('total6').getAttribute('data-value')),
+      subtotal: parseNumber(document.getElementById('subtotal').getAttribute('data-value')),
+      totalEmployee: parseNumber(document.getElementById('totalEmployee').getAttribute('data-value')),
+      numEmployees: parseInt(document.getElementById('numEmployees').value) || 1,
+      monthlyTotal: parseNumber(document.getElementById('monthlyTotal').getAttribute('data-value')),
+      contractMonths: parseInt(document.getElementById('contractMonths').value) || 12,
+      contractTotal: parseNumber(document.getElementById('contractTotal').getAttribute('data-value'))
+    };
+    try {
+      const response = await fetch('https://script.google.com/macros/s/AKfycby_gmUOvOpBzENGbUTZ56soDPBgMN8Y5k_MRc9klyU42ARWVAki2NqiPddhqUsgvZ4y/exec', {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(data)
+      });
+      const result = await response.json();
+      if (result.status !== 'success') {
+        console.error('Erro ao enviar para Google Sheets:', result);
+      }
+    } catch (error) {
+      console.error('Falha na integração:', error);
+    }
+  }
+
+  // Configurar as seções de notas
+  setupFootnotes('add-note', 'footnotes');
+  setupFootnotes('add-note-modulo1', 'module1-footnotes');
+
+  // Inicialização adicional para a nova tabela
+  const tbodyDados = document.getElementById('tbodyDados');
+  tbodyDados.querySelectorAll('.brl-format').forEach(i => {
+    const val = parseNumber(i.getAttribute('data-value'));
+    formatBRL(i, val);
+  });
+  tbodyDados.addEventListener('focusin', e => {
+    if (e.target.classList.contains('brl-format')) {
+      e.target.value = parseNumber(e.target.getAttribute('data-value')) || '';
+    }
+  });
+  tbodyDados.addEventListener('focusout', e => {
+    if (e.target.classList.contains('brl-format')) {
+      const val = parseNumber(e.target.value);
+      formatBRL(e.target, val);
+    }
+  });
+
+  // Configuração do botão de gerar PDF
+  document.getElementById('gen-pdf').addEventListener('click', async () => {
+    await sendToGoogleSheets();
+    const inputsToReplace = [];
+    const replaceInputs = selector => {
+      document.querySelectorAll(selector).forEach(input => {
+        const span = document.createElement('span');
+        span.textContent = input.value || input.placeholder || '';
+        span.style.whiteSpace = 'nowrap';
+        input.style.display = 'none';
+        input.parentNode.insertBefore(span, input.nextSibling);
+        inputsToReplace.push({ input, span });
+      });
+    };
+    replaceInputs('input.brl-format');
+    replaceInputs('input.percent-format');
+    replaceInputs('input.text-input');
+    window.print();
+    inputsToReplace.forEach(({ input, span }) => {
+      span.remove();
+      input.style.display = '';
+    });
+  });
+
+  recalc1();
+});
   </script>
 </body>
 </html>
