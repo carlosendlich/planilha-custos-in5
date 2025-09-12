@@ -7,7 +7,7 @@
   <style>
     /* Container for screen width limitation */
     .content-container {
-      max-width: 60%; /* Limits content to 60% width on screen */
+      max-width: 80%; /* Limits content to 60% width on screen */
       margin: 0 auto; /* Centers the content */
     }
 
@@ -35,6 +35,17 @@
       color: #000; 
       vertical-align: middle; 
     }
+    
+    
+    #tbody0 th:nth-child(3), 
+#tbody0 td:nth-child(3), 
+#tbodyDados th:nth-child(3), 
+#tbodyDados td:nth-child(3) {
+  width: 50%; /* Ajuste para a largura desejada, por exemplo, 30% */
+} 
+    
+    
+    
     th:nth-child(2), td:nth-child(2) { width: auto; }
     th:nth-child(3), td:nth-child(3) { width: 20%; text-align: right; }
     th:nth-child(4), td:nth-child(4) { width: 20%; text-align: right; }
@@ -52,11 +63,12 @@
     }
     .percent-format { border: 1px solid #ccc; }
     .text-input {
-      width: calc(100% - 20px); 
+      width: 100%; 
       box-sizing: border-box; 
-      border: 1px solid #ccc;
       padding: 2px 4px; 
       font-size: 14px;
+       border: none; 
+
     }
     .remove-link { 
       margin-left: 4px; 
@@ -271,7 +283,7 @@
         <tr><td>B</td><td>Adicional de Periculosidade</td><td><input type="text" class="brl-format" data-value="0" /></td></tr>
         <tr><td>C</td><td>Adicional de Insalubridade</td><td><input type="text" class="brl-format" data-value="0" /></td></tr>
         <tr><td>D</td><td>Adicional Noturno</td><td><input type="text" class="brl-format" data-value="0" /></td></tr>
-        <tr><td>E</td><td>Hora Noturna Reduzida</td><td><input type="text" class="brl-format" data-value="0" /></td></tr>
+        <tr><td>E</td><td>Adicional de Hora Noturna Reduzida</td><td><input type="text" class="brl-format" data-value="0" /></td></tr>
         <tr id="add-row-trigger1"><td colspan="3" class="no-print" style="text-align:center;"><span class="add-link" id="add-btn1">+ Adicionar Outro Componente de custo</span></td></tr>
         <tr class="total-row"><td colspan="2">Total</td><td><input type="text" id="total1" readonly class="brl-format" data-value="0" /></td></tr>
       </tbody>
@@ -281,7 +293,7 @@
       <p class="footnote">Nota 2: O adicional de periculosidade está previsto na Súmula 132 TST. Artigo 193 a 197 da CLT. Artigo 7º, inciso XXIII da CF. NR 16 do MTE.</p>
       <p class="footnote">Nota 3: O adicional de insalubridade está estabelecido na CCT da categoria, se houver. Artigo 189 a 192 da CLT (10%, 20% ou 40%). NR 15 do MTE. Súmula nº. 139 do TST.</p>
       <p class="footnote">Nota 4: Adicional noturno: Previsto no Artigo 73 da CLT e artigo 7º, inciso IX da CF. Súmula nº 60 do TST. Corresponde à parcela remuneratória paga para trabalhadores que atuam entre a jornada das 22h às 05h.</p>
-      <p class="footnote">Nota 5: Hora noturna reduzida (hora ficta): conforme Artigo 73 da CLT, a hora de trabalho noturno tem duração de 52 minutos e 30 segundos. Desse modo, o valor desse componente deve corresponder aos 7 minutos e 30 adicionais trabalhados a cada hora normal.</p>
+      <p class="footnote">Nota 5: Adicional de hora noturna reduzida (hora ficta): conforme Artigo 73 da CLT, a hora de trabalho noturno tem duração de 52 minutos e 30 segundos. Desse modo, o valor desse componente deve corresponder aos 7 minutos e 30 adicionais trabalhados a cada hora normal.</p>
     </div>
     <span class="add-link no-print" id="add-note-modulo1" style="display: block; text-align: center; margin-bottom: 20px;">+ adicionar mais informações/memória de cálculo</span>
 
@@ -298,7 +310,7 @@
       <tbody id="tbody2">
         <tr>
           <td>A</td>
-          <td>13º salário</td>
+          <td>13º (décimo terceiro) Salário</td>
           <td><input type="text" class="percent-format fixed-percent" data-value="8.33" readonly /></td>
           <td><input type="text" class="brl-format" data-value="0" readonly /></td>
         </tr>
@@ -353,11 +365,11 @@
       </thead>
       <tbody id="tbody5">
         <tr><td>A</td><td>Aviso Prévio Indenizado</td><td><input type="text" class="percent-format" data-value="0" /></td><td><input type="text" class="brl-format" data-value="0" /></td></tr>
-        <tr><td>B</td><td>FGTS sobre Aviso Indenizado</td><td><input type="text" class="percent-format" data-value="0" /></td><td><input type="text" class="brl-format" data-value="0" /></td></tr>
-        <tr><td>C</td><td>Multa FGTS e Contribuição</td><td><input type="text" class="percent-format" data-value="0" /></td><td><input type="text" class="brl-format" data-value="0" /></td></tr>
+        <tr><td>B</td><td>Incidência do FGTS sobre o Aviso Prévio Indenizado</td><td><input type="text" class="percent-format" data-value="0" /></td><td><input type="text" class="brl-format" data-value="0" /></td></tr>
+        <tr><td>C</td><td>Multa do FGTS sobre o Aviso Prévio Indenizado</td><td><input type="text" class="percent-format" data-value="0" /></td><td><input type="text" class="brl-format" data-value="0" /></td></tr>
         <tr><td>D</td><td>Aviso Prévio Trabalhado</td><td><input type="text" class="percent-format" data-value="0" /></td><td><input type="text" class="brl-format" data-value="0" /></td></tr>
-        <tr><td>E</td><td>Encargos Submódulo 2.2 Aviso Trabalhado</td><td><input type="text" class="percent-format" data-value="0" /></td><td><input type="text" class="brl-format" data-value="0" /></td></tr>
-        <tr><td>F</td><td>Multa FGTS e Contribuição Trabalhado</td><td><input type="text" class="percent-format" data-value="0" /></td><td><input type="text" class="brl-format" data-value="0" /></td></tr>
+        <tr><td>E</td><td>Incidência dos encargos do submódulo 2.2 sobre o Aviso Prévio Trabalhado</td><td><input type="text" class="percent-format" data-value="0" /></td><td><input type="text" class="brl-format" data-value="0" /></td></tr>
+        <tr><td>F</td><td>Multa do FGTS sobre o Aviso Prévio Trabalhado</td><td><input type="text" class="percent-format" data-value="0" /></td><td><input type="text" class="brl-format" data-value="0" /></td></tr>
         <tr class="total-row"><td colspan="2">Total</td><td><input type="text" id="total-pct5" readonly class="percent-format" data-value="0" /></td><td><input type="text" id="total5" readonly class="brl-format" data-value="0" /></td></tr>
       </tbody>
     </table>
